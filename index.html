@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gear Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+
+  </style>
+</head>
+<body>
+  <!-- header section -->
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="logo/logo_blue_bgr.png" alt="Logo" />
+      </div>
+      <div class="nav-links-container">
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <button class="shop-button">Shop Now</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- hero section -->
+
+  <section class="hero">
+    <div class="slideshow-container">
+      <div class="slide active">
+        <div class="slide-content">
+          <div class="text-content">
+            <h1 class="slide-title">Premium Headphones</h1>
+            <p class="slide-description">Experience crystal-clear audio with our latest wireless technology</p>
+            <button class="cta-button">Explore Collection</button>
+          </div>
+          <div class="image-content">
+            <img src="images/hero-section/headphone.png" height="450px" alt="Premium Headphones">
+          </div>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="slide-content">
+          <div class="text-content">
+            <h1 class="slide-title">Smart Watches</h1>
+            <p class="slide-description">Stay connected with cutting-edge wearable technology</p>
+            <button class="cta-button">Shop Watches</button>
+          </div>
+          <div class="image-content">
+            <img src="images/hero-section/smart-watch.png" height="400px" alt="Smart Watch">
+          </div>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="slide-content">
+          <div class="text-content">
+            <h1 class="slide-title">Gaming Gear</h1>
+            <p class="slide-description">Elevate your gaming experience with professional-grade equipment</p>
+            <button class="cta-button">View Gaming</button>
+          </div>
+          <div class="image-content">
+            <img src="images/hero-section/controller.png" height="450px" alt="Gaming Gear">
+          </div>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="slide-content">
+          <div class="text-content">
+            <h1 class="slide-title">Laptops & Tablets</h1>
+            <p class="slide-description">Power and portability for work and play</p>
+            <button class="cta-button">Discover More</button>
+          </div>
+          <div class="image-content">
+            <img src="images/hero-section/Dell Latitude 7350 Ultra 5 135U 16GB Ram 512GB SSD 13_ W10 - Blue, Used - Very Good.png" height="500px" alt="Laptop">
+          </div>
+        </div>
+      </div>
+
+      <button class="nav-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+      <button class="nav-btn next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="dots-container">
+      <span class="dot active" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
