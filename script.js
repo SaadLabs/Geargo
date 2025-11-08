@@ -15,6 +15,8 @@ let current = 0;
 
 // === Show specific slide and update dots ===
 function showSlide(index) {
+  slides.forEach(slide => slide.classList.remove("exit-left"));
+
   // Remove active from all slides and dots
   slides.forEach(slide => slide.classList.remove("active"));
   dots.forEach(dot => dot.classList.remove("active"));
@@ -25,7 +27,6 @@ function showSlide(index) {
   dots[index].classList.add("active");
 
   current = index;
-  slides[current].classList.remove('exit-left');
 }
 
 // === Next & Previous Functions ===
