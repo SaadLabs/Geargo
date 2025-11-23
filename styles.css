@@ -17,9 +17,30 @@
     }
 
     nav {
+      height: 70px;
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
+      padding: 0 30px;
+    }
+
+    .left-section {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+    }
+
+    .center-section {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .right-section {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-right: 50px;
     }
 
     .logo img {
@@ -44,6 +65,24 @@
       color: rgb(64, 64, 64);
       font-weight: 500;
       transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background-color: blue;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-links li a:hover::after {
+      transform: scaleX(1);
     }
 
     .nav-links a:hover {
@@ -59,7 +98,6 @@
       cursor: pointer;
       font-weight: 500;
       margin-left: 20px;
-      /* moves button slightly right */
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
@@ -68,8 +106,6 @@
       transform: scale(1.05);
     }
 
-    /* responsive for navbar */
-
     .menu-icon {
       display: none;
       font-size: 28px;
@@ -77,7 +113,109 @@
       color: #3b71dc;
     }
 
-    @media (max-width: 992px) {
+    .logo-search {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* === Search Bar === */
+    .search-box {
+      display: flex;
+      align-items: center;
+      width: 23vw;
+      padding: 0 12px;
+      height: 40px;
+      background: #F1EFEE;
+      border: none;
+      border-radius: 25px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+
+    }
+
+    .search-box::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #1a73e8;
+      transform: translateY(100%);
+      transition: 0.2s;
+    }
+
+    .search-box:focus-within::after {
+      transform: translateY(0);
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: #F1EFEE;
+      font-size: 0.9rem;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    #clearBtn {
+      display: none;
+    }
+
+    .vline {
+      width: 1px;
+      height: 60%;
+      background: #ccc;
+      margin-right: 3px;
+    }
+
+    .search-icon {
+      opacity: 0.4;
+      transition: 0.2s;
+    }
+
+    .search-box:focus-within .search-icon {
+      opacity: 1;
+    }
+
+    .mobile-search-bar {
+      display: none;
+      width: 100%;
+      padding: 10px 20px;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      /* appear below navbar */
+    }
+
+
+
+    .mobile-search-icon {
+      display: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #3b71dc;
+    }
+
+    .nav-svg img {
+      height: 25px;
+    }
+
+    .mobile-menu-icons {
+      display: none;
+    }
+
+    /* Responsive for navbar header */
+    @media (max-width: 1100px) {
       nav {
         justify-content: space-between;
         padding: 0 20px;
@@ -85,21 +223,25 @@
         height: 80px;
       }
 
-      /* show menu icon */
+      .right-section {
+        margin-right: 5px;
+      }
+
+      .nav-svg img {
+        height: 30px;
+      }
+
+      .no-show-svg {
+        display: none;
+      }
+
       .menu-icon {
         display: block;
       }
 
-      /* hide shop button */
-      .shop-button {
-        display: none;
-      }
-
-      /* dropdown */
       .nav-links-container {
         position: absolute;
         top: 80px;
-        /* just below navbar */
         left: 0;
         width: 100%;
         height: 0;
@@ -121,59 +263,55 @@
 
       }
 
-      /* when active */
       .nav-links-container.active {
-        height: 40vh;
+        height: 70vh;
       }
-    }
 
-    /* === Logo + Search Bar Layout === */
-    .logo-search {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    /* === Search Bar === */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      background-color: #f4f6fa;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 5px 12px;
-      width: 280px;
-      transition: box-shadow 0.3s ease, width 0.3s ease;
-    }
-
-    .search-bar input {
-      border: none;
-      outline: none;
-      background: transparent;
-      width: 100%;
-      font-size: 15px;
-      color: #333;
-    }
-
-    .search-bar button {
-      background: none;
-      border: none;
-      color: #3b71dc;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .search-bar:focus-within {
-      box-shadow: 0 0 6px rgba(59, 113, 220, 0.4);
-      background-color: #fff;
-    }
-
-    /* === Responsive Adjustments === */
-    @media (max-width: 768px) {
-      .search-bar {
-        width: 30%;
+      .mobile-menu-icons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        width: 80%;
+        align-items: center;
       }
+
+      .mobile-icon-link {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: rgb(64, 64, 64);
+        font-weight: 500;
+        font-size: 1.1rem;
+      }
+
+      .desktop-search {
+        display: none;
+      }
+
+      .mobile-search-icon {
+        display: block;
+      }
+
+      .no-show-svg {
+        display: none;
+      }
+
+      .mobile-search-bar .search-box {
+        width: 100%;
+        height: 45px;
+        margin: 0 auto;
+      }
+
+      .mobile-search-bar input {
+        font-size: 16px;
+      }
+
     }
+
 
     /* hero section  */
 
