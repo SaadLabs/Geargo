@@ -6,9 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gear Go</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="styles.css">
   <style>
-    
+
+
   </style>
 </head>
 
@@ -16,28 +18,64 @@
   <!-- header section -->
   <header>
     <nav>
-      <div class="logo">
-        <img src="logo/logo_blue_bgr.png" alt="Logo" />
-        
-      </div>
-      <div class="search-bar">
-      <input type="text" placeholder="Search products..." />
-      <button type="submit"><i class="fas fa-search"></i></button>
-    </div>
-
       <div class="menu-icon" id="menuIcon">☰</div>
 
-      <div class="nav-links-container" id="navContainer">
-        <ul class="nav-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Products</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <button class="shop-button">Shop Now</button>
+      <div class="left-section">
+        <div class="nav-links-container" id="navContainer">
+          <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <div class="mobile-menu-icons">
+            <a href="#" class="mobile-icon-link">
+              <img height="25px" src="svg/user.svg" alt="User">
+              <span>My Account</span>
+            </a>
+            <a href="#" class="mobile-icon-link">
+              <img height="25px" src="svg/Heart.svg" alt="Heart">
+              <span>Wishlist</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-section">
+        <div class="logo">
+          <img src="logo/logo_blue_bgr.png" alt="Logo" />
+        </div>
+      </div>
+
+      <div class="right-section">
+        <!-- Desktop search bar -->
+        <div class="search-box desktop-search">
+          <input id="searchInput" placeholder="Search">
+          <button id="clearBtn"><span class="material-symbols-outlined">close</span></button>
+          <div class="vline"></div>
+          <button><span class="material-symbols-outlined search-icon">search</span></button>
+        </div>
+
+        <!-- Mobile search icon -->
+        <span class="material-symbols-outlined mobile-search-icon">search</span>
+
+        <a class="nav-svg no-show-svg" href=""><img src="svg/user.svg" alt=""></a>
+        <a class="nav-svg no-show-svg" href=""><img src="svg/Heart.svg" alt=""></a>
+        <a class="nav-svg" href=""><img src="svg/cart.svg" alt=""></a>
       </div>
     </nav>
+
+    <!-- Mobile search bar -->
+    <div class="mobile-search-bar">
+      <div class="search-box">
+        <input id="mobileSearchInput" placeholder="Search" />
+        <button id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
+        <div class="vline"></div>
+        <button><span class="material-symbols-outlined search-icon">search</span></button>
+      </div>
+    </div>
   </header>
+
 
   <!-- hero section -->
   <section class="hero">
@@ -116,8 +154,8 @@
         </div>
       </div>
     </div>
-    <button class="slide-change-btn prev">&#10094;</button>
-    <button class="slide-change-btn next">&#10095;</button>
+    <!-- <button class="slide-change-btn prev">&#10094;</button> -->
+    <!-- <button class="slide-change-btn next">&#10095;</button> -->
 
     <div class="dots-container">
       <span class="dot active"></span>
@@ -128,7 +166,89 @@
 
 
   </section>
+
+  <section class="hot-products">
+    <h2>🔥 Hot Products</h2>
+    <div class="hot-products-grid">
+
+      <div class="product-card-premium">
+        <div class="wishlist-icon">
+          <img src="svg/Heart.svg" height="25px" alt=""></a>
+        </div>
+        <div class="product-image-container-premium">
+          <img src="images/hot-deals/headphone1.png" height="200px" alt="Bose QuietComfort Ultra Headphones"
+            class="product-image-premium">
+        </div>
+        <div class="product-info-section">
+          <h3 class="product-title-premium">Bose QuietComfort Ultra Headphones</h3>
+          <div class="price-comparison-section">
+            <span class="current-price-premium"><small>Rs.</small>2000</span>
+            <span class="original-price-premium"><small>Rs.</small>3000</span>
+          </div>
+          <button class="add-to-cart-btn-premium">ADD TO CART</button>
+        </div>
+      </div>
+
+
+      <div class="product-card-premium">
+        <div class="wishlist-icon">
+          <img src="svg/Heart.svg" height="25px" alt=""></a>
+        </div>
+        <div class="product-image-container-premium">
+          <img src="images/hot-deals/headphone1.png" height="200px" alt="Bose QuietComfort Ultra Headphones"
+            class="product-image-premium">
+        </div>
+        <div class="product-info-section">
+          <h3 class="product-title-premium">Bose QuietComfort Ultra Headphones</h3>
+          <div class="price-comparison-section">
+            <span class="current-price-premium"><small>Rs.</small>2000</span>
+            <span class="original-price-premium"><small>Rs.</small>3000</span>
+          </div>
+          <button class="add-to-cart-btn-premium">ADD TO CART</button>
+        </div>
+      </div>
+
+      <div class="product-card-premium">
+        <div class="wishlist-icon">
+          <img src="svg/Heart.svg" height="25px" alt=""></a>
+        </div>
+        <div class="product-image-container-premium">
+          <img src="images/hot-deals/headphone1.png" height="200px" alt="Bose QuietComfort Ultra Headphones"
+            class="product-image-premium">
+        </div>
+        <div class="product-info-section">
+          <h3 class="product-title-premium">Bose QuietComfort Ultra Headphones</h3>
+          <div class="price-comparison-section">
+            <span class="current-price-premium"><small>Rs.</small>2000</span>
+            <span class="original-price-premium"><small>Rs.</small>3000</span>
+          </div>
+          <button class="add-to-cart-btn-premium">ADD TO CART</button>
+        </div>
+      </div>
+
+      <div class="product-card-premium">
+        <div class="wishlist-icon">
+          <img src="svg/Heart.svg" height="25px" alt=""></a>
+        </div>
+        <div class="product-image-container-premium">
+          <img src="images/hot-deals/headphone1.png" height="200px" alt="Bose QuietComfort Ultra Headphones"
+            class="product-image-premium">
+        </div>
+        <div class="product-info-section">
+          <h3 class="product-title-premium">Bose QuietComfort Ultra Headphones</h3>
+          <div class="price-comparison-section">
+            <span class="current-price-premium"><small>Rs.</small>2000</span>
+            <span class="original-price-premium"><small>Rs.</small>3000</span>
+          </div>
+          <button class="add-to-cart-btn-premium">ADD TO CART</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
   <script src="script.js"></script>
+
+
 </body>
 
 </html>

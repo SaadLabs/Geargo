@@ -1,4 +1,6 @@
-// === Navbar Responsiveness ===
+//                                 === Navbar Responsiveness ===
+
+
 const menuIcon = document.getElementById("menuIcon");
 const navContainer = document.getElementById("navContainer");
 
@@ -7,8 +9,66 @@ menuIcon.addEventListener("click", () => {
   menuIcon.textContent = navContainer.classList.contains("active") ? "✕" : "☰";
 });
 
+// Function to handle Search Input Logic
+function setupSearchLogic(inputId, clearBtnId) {
+  const input = document.getElementById(inputId);
+  const clearBtn = document.getElementById(clearBtnId);
 
-// === Slideshow ===
+  // Check if elements exist to prevent errors
+  if (!input || !clearBtn) return;
+
+  // Show/Hide "X" button when typing
+  input.addEventListener("input", () => {
+    if (input.value.length > 0) {
+      clearBtn.style.display = "block";
+    } else {
+      clearBtn.style.display = "none";
+    }
+  });
+
+  //  Clear text when "X" is clicked
+  clearBtn.addEventListener("click", () => {
+    input.value = "";              // Clear text
+    clearBtn.style.display = "none";
+    input.focus();
+  });
+}
+
+setupSearchLogic("searchInput", "clearBtn");
+setupSearchLogic("mobileSearchInput", "mobileClearBtn");
+
+// Listen for screen resize to reset mobile state on desktop
+const mobileSearchBarvis = document.querySelector('.mobile-search-bar');
+const breakpoint = 1100; // Use the same breakpoint as your CSS media query
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > breakpoint) {
+    mobileSearchBarvis.style.display = 'none';
+  }
+});
+
+
+
+// Toggle mobile search bar
+const mobileSearchIcon = document.querySelector('.mobile-search-icon');
+const mobileSearchBar = document.querySelector('.mobile-search-bar');
+
+mobileSearchIcon.addEventListener('click', () => {
+  if (mobileSearchBar.style.display === 'block') {
+    mobileSearchBar.style.display = 'none';
+  } else {
+    mobileSearchBar.style.display = 'block';
+  }
+});
+
+//---------------------------------------------------------------------------------------------------------
+
+
+
+//                                        === Slideshow ===
+
+
+
 const slides = document.querySelectorAll(".hero-container");
 const dots = document.querySelectorAll(".dot");
 let current = 0;
@@ -50,20 +110,20 @@ function resetInterval() {
 }
 
 // === Buttons ===
-const prevBtn = document.querySelector(".prev");
-const nextBtn = document.querySelector(".next");
+// const prevBtn = document.querySelector(".prev");
+// const nextBtn = document.querySelector(".next");
 
-if (prevBtn && nextBtn) {
-  prevBtn.addEventListener("click", () => {
-    showPrevSlide();
-    resetInterval();
-  });
+// if (prevBtn && nextBtn) {
+//   prevBtn.addEventListener("click", () => {
+//     showPrevSlide();
+//     resetInterval();
+//   });
 
-  nextBtn.addEventListener("click", () => {
-    showNextSlide();
-    resetInterval();
-  });
-}
+//   nextBtn.addEventListener("click", () => {
+//     showNextSlide();
+//     resetInterval();
+//   });
+// }
 
 // === Dots Click Handling ===
 dots.forEach((dot, index) => {
