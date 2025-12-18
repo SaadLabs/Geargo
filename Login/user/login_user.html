@@ -13,7 +13,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="login_user.css">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
 
             <div class="content">
                 <h1>GearGo</h1>
-                <p>Login as Admin and start managing the site</p>
+                <p>Login your account and start shopping smart</p>
 
                 <div class="icons">
                     <i class="fa-solid fa-cart-shopping"></i>
@@ -44,8 +44,8 @@
         <!-- RIGHT WHITE SECTION -->
         <div class="right">
             <form class="register-form" id="registerForm">
-                
-                <h2>Login As Admin</h2>
+
+                <h2>Login</h2>
 
                 <input type="hidden" id="role" name="role" value="customer" required>
 
@@ -61,8 +61,12 @@
                 <button type="submit">Login</button>
 
                 <p class="login-text">
-                    Not an admin?
-                    <a href="../user/index.html">Login as user</a>
+                    Don't have an account?
+                    <a href="../../Register/register.html">Register</a>
+                </p>
+
+                <p class="admin-login">
+                    <a href="../admin/login_admin.html">Login as Admin</a>
                 </p>
 
                 <p class="error" id="errorMsg"></p>

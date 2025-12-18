@@ -1,3 +1,7 @@
+const form = document.getElementById("registerForm");
+const password = document.getElementById("password");
+const errorMsg = document.getElementById("errorMsg");
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -34,4 +38,22 @@ form.addEventListener("submit", (e) => {
 
   errorMsg.style.color = "green";
   errorMsg.textContent = "Registration successful (frontend only)";
+});
+
+// show password
+const togglePassword = document.getElementById("togglePassword");
+
+togglePassword.addEventListener("click", () => {
+  // Toggle the type attribute
+  const type = password.getAttribute("type") === "password" ? "text" : "password";
+  password.setAttribute("type", type);
+
+  // Toggle icon
+  if (type === "text") {
+    togglePassword.classList.remove("fa-eye");
+    togglePassword.classList.add("fa-eye-slash");
+  } else {
+    togglePassword.classList.remove("fa-eye-slash");
+    togglePassword.classList.add("fa-eye");
+  }
 });
