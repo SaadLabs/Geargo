@@ -1,0 +1,265 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT */
+.left {
+    flex: 1;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+
+    background-image: url('../assets/images/home-section/banner/geargo-banner-pc.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+
+}
+
+
+.left .content {
+    animation: slideFade 1.2s ease forwards;
+}
+
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.left h1 {
+    font-size: 46px;
+    font-weight: 700;
+}
+
+.left p {
+    margin-top: 15px;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* Floating icons */
+.icons {
+    margin-top: 40px;
+}
+
+.icons i {
+    font-size: 30px;
+    margin-right: 22px;
+    animation: floatIcon 4s ease-in-out infinite;
+    opacity: 0.9;
+}
+
+/* Delay for natural movement */
+.icons i:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.icons i:nth-child(3) {
+    animation-delay: 1s;
+}
+
+.icons i:nth-child(4) {
+    animation-delay: 1.5s;
+}
+
+@keyframes floatIcon {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+
+.left .logo {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+}
+
+.left .logo img {
+    width: 120px;
+    height: auto;
+}
+
+/* Optional animation */
+.left .logo {
+    animation: logoFade 1s ease forwards;
+}
+
+@keyframes logoFade {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RIGHT */
+.right {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    width: 100%;
+    max-width: 380px;
+}
+
+.register-form h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #4a6cf7;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #0a58ff;
+    box-shadow: 0 0 0 2px rgba(10, 88, 255, 0.1);
+}
+
+.password {
+    position: relative;
+}
+
+.password i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #3977f3;
+    color: white;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #084ed6;
+}
+
+.login-text {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.login-text a {
+    color: #0a58ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left {
+        flex: none;
+        width: 100%;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .left h1 {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .left p {
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .logo img {
+        display: none;
+    }
+
+    .icons {
+        display: none;
+    }
+
+    .right {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .register-form {
+        max-width: 100%;
+    }
+}
