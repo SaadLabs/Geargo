@@ -1,5 +1,5 @@
 // Get elements
-const form = document.getElementById("registerForm");
+const form = document.getElementById("loginForm");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const togglePassword = document.getElementById("togglePassword");
@@ -48,8 +48,14 @@ form.addEventListener("submit", (e) => {
     errorMsg.textContent = "Password must be at least 6 characters";
     return;
   }
-
-  // Success (frontend only)
-  errorMsg.style.color = "green";
-  errorMsg.textContent = "Login successful (frontend only)";
+  form.submit();
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const error = urlParams.get('error');
+
+if (error && errorMsg) {
+  errorMsg.style.color = "red";
+  errorMsg.textContent = decodeURIComponent(error);
+}
+

@@ -41,7 +41,15 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  // Success (frontend only)
-  errorMsg.style.color = "green";
-  errorMsg.textContent = "Login successful (frontend only)";
+  form.submit();
 });
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const error = urlParams.get('error');
+
+if (error) {
+    const errorMsg = document.getElementById("errorMsg");
+    errorMsg.style.color = "red";
+    errorMsg.textContent = decodeURIComponent(error);
+}

@@ -10,8 +10,9 @@ function dbConnect(){
 }
 
 //Hot products
-function homePage_products($num, $conn){
-    $query = "SELECT * FROM `product` order by rand() limit $num";
+function Random_products($num, $conn){
+    // $query = "SELECT * FROM `product` order by rand() limit $num";
+    $query = "SELECT * FROM `product` WHERE `is_active` = 1 ORDER BY rand() limit $num";
     $result = mysqli_query($conn, $query);
 
     $products = [];

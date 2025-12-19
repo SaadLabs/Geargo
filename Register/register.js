@@ -35,9 +35,7 @@ form.addEventListener("submit", (e) => {
     errorMsg.textContent = "Passwords do not match";
     return;
   }
-
-  errorMsg.style.color = "green";
-  errorMsg.textContent = "Registration successful (frontend only)";
+    form.submit(); // Actually submits to PHP
 });
 
 // show password
@@ -57,3 +55,12 @@ togglePassword.addEventListener("click", () => {
     togglePassword.classList.add("fa-eye");
   }
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const error = urlParams.get('error');
+
+if (error) {
+    const errorMsg = document.getElementById("errorMsg");
+    errorMsg.style.color = "red";
+    errorMsg.textContent = decodeURIComponent(error);
+}

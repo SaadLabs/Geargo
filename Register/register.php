@@ -17,7 +17,6 @@
 </head>
 
 <body>
-
     <div class="container">
 
         <!-- LEFT BLUE SECTION -->
@@ -42,38 +41,38 @@
 
         <!-- RIGHT WHITE SECTION -->
         <div class="right">
-            <form class="register-form" id="registerForm">
+            <form class="register-form" id="registerForm" method = post action = reg_action.php>
                 
                 <h2>Create Account</h2>
 
                 <input type="hidden" id="role" name="role" value="customer" required>
 
                 <div class="input-group">
-                    <input type="text" id="name" placeholder="Full Name">
+                    <input type="text" id="name" name = "name" placeholder="Full Name" required>
                 </div>
 
                 <div class="input-group">
-                    <input type="email" id="email" placeholder="Email Address" required>
+                    <input type="email" id="email" name = "email"placeholder="Email Address" required>
                 </div>
 
                 <div class="input-group">
-                    <input type="tel" id="mobile" placeholder="Mobile Number" required>
+                    <input type="tel" id="mobile" name = "phone" placeholder="Mobile Number" required>
                 </div>
 
                 <div class="input-group password">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="password" name = "password" placeholder="Password" required>
                     <i class="fa-solid fa-eye" id="togglePassword"></i>
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <input type="password" id="confirmPassword" name = "conf_pass" placeholder="Confirm Password" required>
                 </div>
 
                 <button type="submit">Create Account</button>
 
                 <p class="login-text">
                     Already have an account?
-                    <a href="../Login/user/login_user.html">Login</a>
+                    <a href="../Login/user/login_user.php">Login</a>
                 </p>
 
                 <p class="error" id="errorMsg"></p>

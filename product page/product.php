@@ -107,7 +107,7 @@
 
                 <div class="related-products-grid">
                     <?php
-                    $products = homePage_products(8, $conn);
+                    $products = Random_products(8, $conn);
                     $product = [];
 
                     foreach ($products as $product) {

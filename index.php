@@ -59,7 +59,7 @@
         <!-- Mobile search icon -->
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-        <a class="nav-svg no-show-svg" href=""><img src="assets/svg/user.svg" alt=""></a>
+        <a class="nav-svg no-show-svg" href="Register/register.php"><img src="assets/svg/user.svg" alt=""></a>
         <a class="nav-svg no-show-svg" href=""><img src="assets/svg/Heart.svg" alt=""></a>
         <a class="nav-svg" href=""><img src="assets/svg/cart.svg" alt=""></a>
       </div>
@@ -173,7 +173,7 @@
       <?php 
         require_once 'backend/Config/functions.php';
         $conn = dbConnect();
-        $products = homePage_products(10, $conn);
+        $products = Random_products(10, $conn);
         $product = $products[0];
 
         foreach ($products as $product){
