@@ -35,10 +35,6 @@
                             <img height="25px" src="../assets/svg/user.svg" alt="User">
                             <span>My Account</span>
                         </a>
-                        <a href="#" class="mobile-icon-link">
-                            <img height="25px" src="../assets/svg/Heart.svg" alt="Heart">
-                            <span>Wishlist</span>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -62,7 +58,6 @@
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
 
                 <a class="nav-svg no-show-svg" href=""><img src="../assets/svg/user.svg" alt=""></a>
-                <a class="nav-svg no-show-svg" href=""><img src="../assets/svg/Heart.svg" alt=""></a>
                 <a class="nav-svg" href=""><img src="../assets/svg/cart.svg" alt=""></a>
             </div>
         </nav>

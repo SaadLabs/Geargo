@@ -46,7 +46,7 @@
     .logo img {
       height: 90px;
       width: 160px;
-      
+
     }
 
     .nav-links-container {
@@ -621,7 +621,7 @@
       }
     }
 
-    .hot-products a{
+    .hot-products a {
       text-decoration: none;
     }
 
@@ -642,6 +642,7 @@
     /* ---------- CARD STYLE ---------- */
 
     .product-card-premium {
+      height: 310px;
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 4px;
@@ -650,6 +651,9 @@
       font-family: sans-serif;
       cursor: pointer;
       transition: box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .product-card-premium:hover {
@@ -675,7 +679,10 @@
     }
 
     .product-info-section {
-      padding-top: 5px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .product-title-premium {
@@ -831,7 +838,7 @@
       }
     }
 
-/* ===== Why buy section ===== */
+    /* ===== Why buy section ===== */
 
     .why-geargo {
       width: 90%;

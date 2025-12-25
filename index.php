@@ -9,9 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="home.css">
-  <style>
 
-  </style>
 </head>
 
 <body>
@@ -24,7 +22,7 @@
         <div class="nav-links-container" id="navContainer">
           <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><a href="#">Products</a></li>
+            <li><a href="category/index.html">Products</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
           </ul>
@@ -32,10 +30,6 @@
             <a href="#" class="mobile-icon-link">
               <img height="25px" src="assets/svg/user.svg" alt="User">
               <span>My Account</span>
-            </a>
-            <a href="#" class="mobile-icon-link">
-              <img height="25px" src="assets/svg/Heart.svg" alt="Heart">
-              <span>Wishlist</span>
             </a>
           </div>
         </div>
@@ -60,7 +54,6 @@
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
         <a class="nav-svg no-show-svg" href="Register/register.php"><img src="assets/svg/user.svg" alt=""></a>
-        <a class="nav-svg no-show-svg" href=""><img src="assets/svg/Heart.svg" alt=""></a>
         <a class="nav-svg" href=""><img src="assets/svg/cart.svg" alt=""></a>
       </div>
     </nav>
@@ -179,7 +172,7 @@
         foreach ($products as $product){
       ?>
       <a href="product page/product.php?id=<?php echo $product['product_id'];?>">
-        <div class="product-card-premium big-card">
+        <div class="product-card-premium">
           <!-- <div class="wishlist-icon">
           <img src="svg/Heart.svg" height="25px" alt=""></a>
         </div> -->
