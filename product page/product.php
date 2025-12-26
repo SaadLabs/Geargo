@@ -67,7 +67,7 @@
                         <li><a href="#">Products</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="orders/orders.html">My Orders</a></li>
+                        <li><a href="../orders/orders.html">My Orders</a></li>
                     </ul>
                     <div class="mobile-menu-icons">
                         <a href="#" class="mobile-icon-link">
@@ -96,7 +96,7 @@
                 <!-- Mobile search icon -->
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-                <a class="nav-svg no-show-svg" href=""><img src="../assets/svg/user.svg" alt=""></a>
+                <a class="nav-svg no-show-svg" href="user profile/user.html"><img src="../assets/svg/user.svg" alt=""></a>
                 <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
                     <img src="../assets/svg/cart.svg" alt="Cart">
                 </a>
