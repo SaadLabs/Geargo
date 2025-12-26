@@ -9,10 +9,51 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="home.css">
-
+  <link rel="stylesheet" href="cart/cart.css">
 </head>
 
 <body>
+
+  <!-- ================= CART START ================= -->
+  <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+
+  <div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <span class="close-cart" onclick="closeCart()">×</span>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+
+          <div class="cart-item">
+          <img src="headphone1.png" alt="Test Product">
+
+          <div class="cart-item-details">
+            <h4>GearGo Wireless Headphones</h4>
+            <p>Rs. 5,999</p>
+            <input type="number" value="1" min="1">
+          </div>
+
+          <button class="remove-btn">&times;</button>
+    </div>
+
+
+      <!-- Items will come here dynamically -->
+      <p class="empty-cart">Your cart is empty</p>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">Rs. 0</strong>
+      </div>
+      <button class="checkout-btn">Checkout</button>
+    </div>
+  </div>
+  <!-- ================= CART END ================= -->
+
+
+
   <!-- header section -->
   <header>
     <nav>
@@ -22,9 +63,10 @@
         <div class="nav-links-container" id="navContainer">
           <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><a href="category/index.html">Products</a></li>
+            <li><a href="category/category.html">Products</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
+            <li><a href="orders/orders.html">My Orders</a></li>
           </ul>
           <div class="mobile-menu-icons">
             <a href="#" class="mobile-icon-link">
@@ -54,7 +96,9 @@
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
         <a class="nav-svg no-show-svg" href="Register/register.php"><img src="assets/svg/user.svg" alt=""></a>
-        <a class="nav-svg" href=""><img src="assets/svg/cart.svg" alt=""></a>
+        <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
+          <img src="assets/svg/cart.svg" alt="Cart">
+          </a>
       </div>
     </nav>
 
@@ -261,6 +305,7 @@
   </section>
 
   <script src="home.js"></script>
+  <script src="cart/cart.js"></script>
 
 
 </body>
