@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - GearGo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="../cart/cart.css">
+</head>
+<style>
+
+</style>
+
+<body>
+    <!-- ================= CART START ================= -->
+    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <span class="close-cart" onclick="closeCart()">×</span>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+
+            <div class="cart-item">
+                <img src="../headphone1.png" alt="Test Product">
+
+                <div class="cart-item-details">
+                    <h4>GearGo Wireless Headphones</h4>
+                    <p>Rs. 5,999</p>
+                    <input type="number" value="1" min="1">
+                </div>
+
+                <button class="remove-btn">&times;</button>
+            </div>
+
+
+            <!-- Items will come here dynamically -->
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <strong id="cartTotal">Rs. 0</strong>
+            </div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+    <!-- ================= CART END ================= -->
+    <!-- header section -->
+    <header>
+        <nav>
+            <div class="menu-icon" id="menuIcon">☰</div>
+
+            <div class="left-section">
+                <div class="nav-links-container" id="navContainer">
+                    <ul class="nav-links">
+                        <li><a href="../index.php">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="../orders/orders.html">My Orders</a></li>
+                    </ul>
+                    <div class="mobile-menu-icons">
+                        <a href="#" class="mobile-icon-link">
+                            <img height="25px" src="../assets/svg/user.svg" alt="User">
+                            <span>My Account</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="center-section">
+                <div class="logo">
+                    <img src="../assets/logo/logo_blue_bgr.png" alt="Logo" />
+                </div>
+            </div>
+
+            <div class="right-section">
+                <!-- Desktop search bar -->
+                <div class="search-box desktop-search">
+                    <input id="searchInput" placeholder="Search">
+                    <button id="clearBtn"><span class="material-symbols-outlined">close</span></button>
+                    <div class="vline"></div>
+                    <button><span class="material-symbols-outlined search-icon">search</span></button>
+                </div>
+
+                <!-- Mobile search icon -->
+                <span class="material-symbols-outlined mobile-search-icon">search</span>
+
+                <a class="nav-svg no-show-svg" href="user profile/user.html"><img src="../assets/svg/user.svg"
+                        alt=""></a>
+                <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
+                    <img src="../assets/svg/cart.svg" alt="Cart">
+                </a>
+            </div>
+        </nav>
+
+        <!-- Mobile search bar -->
+        <div class="mobile-search-bar">
+            <div class="search-box">
+                <input id="mobileSearchInput" placeholder="Search" />
+                <button id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
+                <div class="vline"></div>
+                <button><span class="material-symbols-outlined search-icon">search</span></button>
+            </div>
+        </div>
+    </header>
+
+    <!--  ================= header end ================= -->
+
+    
+
+    <div class="page-container">
+        <div class="shop-top-bar">
+
+            <div class="filter-box">
+                <label>Category</label>
+                <select>
+                    <option>All Categories</option>
+                    <option>Headphones</option>
+                    <option>Smart Watches</option>
+                    <option>Laptops</option>
+                    <option>Gaming Accessories</option>
+                    <option>Mobile & Tablets</option>
+                </select>
+            </div>
+
+            <div class="filter-box">
+                <label>Sort By</label>
+                <select>
+                    <option>Default</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <!-- Products Grid -->
+        <section class="products">
+            <div class="products-grid">
+
+                <!-- Product 1 -->
+                <a href="product-page/product.html">
+                    <div class="product-card-premium big-card">
+
+                        <div class="product-image-container-premium">
+                            <img src="../headphone1.png" height="200px" alt="Wireless Headphones"
+                                class="product-image-premium">
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3 class="product-title-premium">Wireless Headphones black color limited</h3>
+
+                            <div class="price-comparison-section">
+                                <span class="current-price-premium"><small>Rs.</small>5999</span>
+                                <span class="original-price-premium"><small>Rs.</small>6599</span>
+                            </div>
+
+                            <button class="add-to-cart-btn-premium">ADD TO CART</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                <!-- Product 2 -->
+                <a href="product-page/product.html">
+                    <div class="product-card-premium big-card">
+
+                        <div class="product-image-container-premium">
+                            <img src="../headphone1.png" height="200px" alt="Smart Watch Pro"
+                                class="product-image-premium">
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3 class="product-title-premium">Smart Watch Pro</h3>
+
+                            <div class="price-comparison-section">
+                                <span class="current-price-premium"><small>Rs.</small>9499</span>
+                                <span class="original-price-premium"><small>Rs.</small>10499</span>
+                            </div>
+
+                            <button class="add-to-cart-btn-premium">ADD TO CART</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                <!-- Product 3 -->
+                <a href="product-page/product.html">
+                    <div class="product-card-premium big-card">
+
+                        <div class="product-image-container-premium">
+                            <img src="../headphone1.png" height="200px" alt="Gaming Mouse"
+                                class="product-image-premium">
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3 class="product-title-premium">Gaming Mouse</h3>
+
+                            <div class="price-comparison-section">
+                                <span class="current-price-premium"><small>Rs.</small>2499</span>
+                                <span class="original-price-premium"><small>Rs.</small>2799</span>
+                            </div>
+
+                            <button class="add-to-cart-btn-premium">ADD TO CART</button>
+                        </div>
+
+                    </div>
+                </a>
+                <!-- Product 4 -->
+                <a href="product-page/product.html">
+                    <div class="product-card-premium big-card">
+
+                        <div class="product-image-container-premium">
+                            <img src="../headphone1.png" height="200px" alt="Wireless Headphones"
+                                class="product-image-premium">
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3 class="product-title-premium">Wireless Headphones</h3>
+
+                            <div class="price-comparison-section">
+                                <span class="current-price-premium"><small>Rs.</small>5999</span>
+                                <span class="original-price-premium"><small>Rs.</small>6599</span>
+                            </div>
+
+                            <button class="add-to-cart-btn-premium">ADD TO CART</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                <!-- product 5 -->
+                <a href="product-page/product.html">
+                    <div class="product-card-premium big-card">
+
+                        <div class="product-image-container-premium">
+                            <img src="../headphone1.png" height="200px" alt="Wireless Headphones"
+                                class="product-image-premium">
+                        </div>
+
+                        <div class="product-info-section">
+                            <h3 class="product-title-premium">Wireless Headphones</h3>
+
+                            <div class="price-comparison-section">
+                                <span class="current-price-premium"><small>Rs.</small>5999</span>
+                                <span class="original-price-premium"><small>Rs.</small>6599</span>
+                            </div>
+
+                            <button class="add-to-cart-btn-premium">ADD TO CART</button>
+                        </div>
+
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#">« Prev</a>
+            <a class="active" href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">Next »</a>
+        </div>
+    </div>
+
+</body>
+<script src="category.js"></script>
+<script src="../cart/cart.js"></script>
+
+</html>

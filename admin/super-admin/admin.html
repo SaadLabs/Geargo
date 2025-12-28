@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GearGo Admin Panel</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="logo">GearGo</h2>
+        <ul>
+            <li class="active" onclick="showSection('dashboard', this)">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </li>
+            <li onclick="showSection('products', this)">
+                <i class="bi bi-box-seam"></i> Products
+            </li>
+            <li onclick="showSection('orders', this)">
+                <i class="bi bi-cart-check"></i> Orders
+            </li>
+            <li onclick="showSection('users', this)">
+                <i class="bi bi-people"></i> Users
+            </li>
+            <li onclick="showSection('staff', this)">
+                <i class="bi bi-person-badge"></i> Staff
+            </li>
+
+            <li class="logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="content-section">
+            <div class="section-header">
+                <h1>Dashboard</h1>
+
+                <select id="dashboardFilter" onchange="updateDashboard()">
+                    <option value="today">Today</option>
+                    <option value="week">Last 7 Days</option>
+                    <option value="month">Last 30 Days</option>
+                    <option value="year">Last Year</option>
+                </select>
+            </div>
+
+            <div class="cards">
+                <div class="card">Orders<br><span id="orderCount">0</span></div>
+                <div class="card">Sales<br><span id="salesAmount">Rs. 0</span></div>
+                <div class="card">Products<br><span id="productCount">85</span></div>
+                <div class="card">Users<br><span id="userCount">230</span></div>
+            </div>
+        </section>
+
+
+        <!-- Products -->
+        <section id="products" class="content-section hidden">
+            <div class="section-header">
+                <h1>Products</h1>
+                <button class="btn-primary" onclick="openModal()">+ Add Product</button>
+            </div>
+
+            <input type="text" id="searchInput" placeholder="Search product..." onkeyup="searchProduct()">
+
+            <table id="productTable">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Wireless Headphones</td>
+                    <td>120</td>
+                    <td>50</td>
+                    <td>
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Smart Watch</td>
+                    <td>90</td>
+                    <td>30</td>
+                    <td>
+                        <button class="btn-edit">Edit</button>
+                        <button class="btn-delete">Delete</button>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <h2>Add Product</h2>
+            <form>
+                <input type="text" placeholder="Product Name" required>
+                <input type="number" placeholder="Price" required>
+                <input type="number" placeholder="Stock Quantity" required>
+                <textarea placeholder="Description"></textarea>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save</button>
+                    <button type="button" class="btn-remove" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Orders Section -->
+    <section id="orders" class="content-section hidden">
+        <div class="section-header">
+            <h1>Orders</h1>
+        </div>
+        <input type="text" id="searchOrders" placeholder="Search orders..." onkeyup="searchOrders()">
+        <table id="ordersTable">
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>#1001</td>
+                <td>Ali Khan</td>
+                <td>Rs. 4,500</td>
+                <td>Pending</td>
+            </tr>
+            <tr>
+                <td>#1002</td>
+                <td>Ahmed</td>
+                <td>Rs. 7,200</td>
+                <td>Delivered</td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Users Section -->
+    <section id="users" class="content-section hidden">
+        <div class="section-header">
+            <h1>Users</h1>
+        </div>
+        <input type="text" id="searchUsers" placeholder="Search users..." onkeyup="searchUsers()">
+        <table id="usersTable">
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Block/Unblock</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Ali Khan</td>
+                <td>ali@gmail.com</td>
+                <td>Active</td>
+                <td>
+                    <button onclick="toggleUser(this)" class="btn-edit">Block</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Ahmed</td>
+                <td>ahmed@gmail.com</td>
+                <td>Blocked</td>
+                <td>
+                    <button onclick="toggleUser(this)" class="btn-edit">Block</button>
+                </td>
+            </tr>
+
+        </table>
+    </section>
+
+
+    <!-- Staff -->
+    <section id="staff" class="content-section hidden">
+        <div class="section-header">
+            <h1>Staff</h1>
+            <button class="btn-primary" onclick="openStaffModal()">+ Add Staff</button>
+        </div>
+
+        <table id="staffTable">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Usman</td>
+                <td>Manager</td>
+                <td>usman@geargo.com</td>
+                <td>Active</td>
+                <td>
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Remove</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Ayesha</td>
+                <td>Support</td>
+                <td>ayesha@geargo.com</td>
+                <td>Inactive</td>
+                <td>
+                    <button class="btn-edit">Edit</button>
+                    <button class="btn-delete">Remove</button>
+                </td>
+            </tr>
+        </table>
+    </section>
+
+    <!-- Add Staff Modal -->
+    <div class="modal" id="staffModal">
+        <div class="modal-content">
+            <h2>Add Staff</h2>
+            <form onsubmit="return validateStaffForm()">
+                <input type="text" id="staffName" placeholder="Staff Name" required>
+                <input type="email" id="staffEmail" placeholder="Email" required>
+
+                <select id="staffRole" required>
+                    <option value="">Select Role</option>
+                    <option>Manager</option>
+                    <option>Support</option>
+                    <option>Inventory</option>
+                </select>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save</button>
+                    <button type="button" class="btn-delete" onclick="closeStaffModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
