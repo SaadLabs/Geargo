@@ -1,3 +1,32 @@
+<?php
+// 1. Start Session and Include Functions
+// Adjust paths if your folder structure is different
+require_once '../Backend/config/session_manager.php'; 
+require_once '../Backend/config/functions.php';
+
+$conn = dbConnect();
+
+// 2. Check Login Status
+$isLoggedIn = isset($_SESSION['user_id']);
+$user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
+
+// 3. Define Paths
+// IMPORTANT: Update this to the actual path of your login file
+$loginPagePath = "Login/user/login_user.php"; 
+$profilePagePath = "user profile/user.php";
+
+// Determine where links should go
+$accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
+
+// 4. Fetch Cart Data (If logged in)
+$cartItems = [];
+$cartTotal = 0;
+if ($isLoggedIn) {
+    // We use the function we created earlier
+    $cartItems = getCartItems($conn, $user_id);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,37 +46,55 @@
   <!-- ================= CART START ================= -->
   <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
-  <div id="cart-sidebar" class="cart-sidebar">
+    <div id="cart-sidebar" class="cart-sidebar">
     <div class="cart-header">
       <h2>Your Cart</h2>
       <span class="close-cart" onclick="closeCart()">×</span>
     </div>
 
     <div class="cart-items" id="cartItems">
+      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+          <?php foreach ($cartItems as $item): ?>
+              <?php 
+                  $itemTotal = $item['price'] * $item['quantity'];
+                  $cartTotal += $itemTotal;
+                  // Placeholder image logic
+                  $imgSrc = "headphone1.png"; // Replace with $item['image'] if you add it to DB
+              ?>
+              <div class="cart-item">
+                <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
 
-      <div class="cart-item">
-        <img src="../headphone1.png" alt="Test Product">
+                <div class="cart-item-details">
+                  <h4><?php echo htmlspecialchars($item['title']); ?></h4>
+                  <p>Rs. <?php echo number_format($item['price']); ?></p>
+                  <input type="number" value="<?php echo $item['quantity']; ?>" min="1" readonly>
+                </div>
 
-        <div class="cart-item-details">
-          <h4>GearGo Wireless Headphones</h4>
-          <p>Rs. 5,999</p>
-          <input type="number" value="1" min="1">
-        </div>
-
-        <button class="remove-btn">&times;</button>
-      </div>
-
-
-      <!-- Items will come here dynamically -->
-      <p class="empty-cart">Your cart is empty</p>
+                <button class="remove-btn">&times;</button>
+            </div>
+          <?php endforeach; ?>
+      <?php elseif (!$isLoggedIn): ?>
+          <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to view your cart.</p>
+      <?php else: ?>
+          <p class="empty-cart" style="display:block;">Your cart is empty</p>
+      <?php endif; ?>
     </div>
 
     <div class="cart-footer">
       <div class="cart-total">
         <span>Total:</span>
-        <strong id="cartTotal">Rs. 0</strong>
+        <strong id="cartTotal">Rs. <?php echo number_format($cartTotal); ?></strong>
       </div>
-      <button class="checkout-btn">Checkout</button>
+      
+      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+          <form action="cart/checkout_action.php" method="POST">
+             <button type="submit" class="checkout-btn">Checkout</button>
+          </form>
+      <?php else: ?>
+          <button class="checkout-btn" onclick="window.location.href='<?php echo $loginPagePath; ?>'">
+            <?php echo $isLoggedIn ? 'Checkout' : 'Login to Checkout'; ?>
+          </button>
+      <?php endif; ?>
     </div>
   </div>
   <!-- ================= CART END ================= -->
@@ -61,10 +108,10 @@
         <div class="nav-links-container" id="navContainer">
           <ul class="nav-links">
             <li><a href="../index.php">Home</a></li>
-            <li><a href="../category/category.html">Products</a></li>
+            <li><a href="../category/category.php">Products</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="../orders/orders.html">My Orders</a></li>
+            <li><a href="../orders/orders.php">My Orders</a></li>
           </ul>
           <div class="mobile-menu-icons">
             <a href="#" class="mobile-icon-link">
@@ -93,7 +140,7 @@
         <!-- Mobile search icon -->
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-        <a class="nav-svg no-show-svg" href="user profile/user.html"><img src="../assets/svg/user.svg" alt=""></a>
+        <a class="nav-svg no-show-svg" href="../user profile/user.php"><img src="../assets/svg/user.svg" alt=""></a>
         <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
           <img src="../assets/svg/cart.svg" alt="Cart">
         </a>

@@ -1,3 +1,32 @@
+<?php
+// 1. Start Session and Include Functions
+// Adjust paths if your folder structure is different
+require_once 'Backend/config/session_manager.php'; 
+require_once 'Backend/config/functions.php';
+
+$conn = dbConnect();
+
+// 2. Check Login Status
+$isLoggedIn = isset($_SESSION['user_id']);
+$user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
+
+// 3. Define Paths
+// IMPORTANT: Update this to the actual path of your login file
+$loginPagePath = "Login/user/login_user.php"; 
+$profilePagePath = "user profile/user.php";
+
+// Determine where links should go
+$accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
+
+// 4. Fetch Cart Data (If logged in)
+$cartItems = [];
+$cartTotal = 0;
+if ($isLoggedIn) {
+    // We use the function we created earlier
+    $cartItems = getCartItems($conn, $user_id);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +43,6 @@
 
 <body>
 
-  <!-- ================= CART START ================= -->
   <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
   <div id="cart-sidebar" class="cart-sidebar">
@@ -24,37 +52,50 @@
     </div>
 
     <div class="cart-items" id="cartItems">
+      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+          <?php foreach ($cartItems as $item): ?>
+              <?php 
+                  $itemTotal = $item['price'] * $item['quantity'];
+                  $cartTotal += $itemTotal;
+                  // Placeholder image logic
+                  $imgSrc = "headphone1.png"; // Replace with $item['image'] if you add it to DB
+              ?>
+              <div class="cart-item">
+                <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
 
-          <div class="cart-item">
-          <img src="headphone1.png" alt="Test Product">
+                <div class="cart-item-details">
+                  <h4><?php echo htmlspecialchars($item['title']); ?></h4>
+                  <p>Rs. <?php echo number_format($item['price']); ?></p>
+                  <input type="number" value="<?php echo $item['quantity']; ?>" min="1" readonly>
+                </div>
 
-          <div class="cart-item-details">
-            <h4>GearGo Wireless Headphones</h4>
-            <p>Rs. 5,999</p>
-            <input type="number" value="1" min="1">
-          </div>
-
-          <button class="remove-btn">&times;</button>
-    </div>
-
-
-      <!-- Items will come here dynamically -->
-      <p class="empty-cart">Your cart is empty</p>
+                <button class="remove-btn">&times;</button>
+            </div>
+          <?php endforeach; ?>
+      <?php elseif (!$isLoggedIn): ?>
+          <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to view your cart.</p>
+      <?php else: ?>
+          <p class="empty-cart" style="display:block;">Your cart is empty</p>
+      <?php endif; ?>
     </div>
 
     <div class="cart-footer">
       <div class="cart-total">
         <span>Total:</span>
-        <strong id="cartTotal">Rs. 0</strong>
+        <strong id="cartTotal">Rs. <?php echo number_format($cartTotal); ?></strong>
       </div>
-      <button class="checkout-btn">Checkout</button>
+      
+      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+          <form action="cart/checkout_action.php" method="POST">
+             <button type="submit" class="checkout-btn">Checkout</button>
+          </form>
+      <?php else: ?>
+          <button class="checkout-btn" onclick="window.location.href='<?php echo $loginPagePath; ?>'">
+            <?php echo $isLoggedIn ? 'Checkout' : 'Login to Checkout'; ?>
+          </button>
+      <?php endif; ?>
     </div>
   </div>
-  <!-- ================= CART END ================= -->
-
-
-
-  <!-- header section -->
   <header>
     <nav>
       <div class="menu-icon" id="menuIcon">☰</div>
@@ -63,15 +104,16 @@
         <div class="nav-links-container" id="navContainer">
           <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><a href="category/category.html">Products</a></li>
+            <li><a href="category/category.php">Products</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="orders/orders.html">My Orders</a></li>
+            <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a></li>
           </ul>
+          
           <div class="mobile-menu-icons">
-            <a href="#" class="mobile-icon-link">
+            <a href="<?php echo $accountLink; ?>" class="mobile-icon-link">
               <img height="25px" src="assets/svg/user.svg" alt="User">
-              <span>My Account</span>
+              <span><?php echo $isLoggedIn ? 'My Account' : 'Login / Register'; ?></span>
             </a>
           </div>
         </div>
@@ -84,7 +126,6 @@
       </div>
 
       <div class="right-section">
-        <!-- Desktop search bar -->
         <div class="search-box desktop-search">
           <input id="searchInput" placeholder="Search">
           <button id="clearBtn"><span class="material-symbols-outlined">close</span></button>
@@ -92,17 +133,19 @@
           <button><span class="material-symbols-outlined search-icon">search</span></button>
         </div>
 
-        <!-- Mobile search icon -->
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-        <a class="nav-svg no-show-svg" href="user profile/user.html"><img src="assets/svg/user.svg" alt=""></a>
-        <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
+        <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>">
+            <img src="assets/svg/user.svg" alt="User Profile">
+        </a>
+        
+        <a class="nav-svg" href="javascript:void(0)" 
+           onclick="<?php echo $isLoggedIn ? 'openCart()' : "window.location.href='$loginPagePath'"; ?>">
           <img src="assets/svg/cart.svg" alt="Cart">
-          </a>
+        </a>
       </div>
     </nav>
 
-    <!-- Mobile search bar -->
     <div class="mobile-search-bar">
       <div class="search-box">
         <input id="mobileSearchInput" placeholder="Search" />
@@ -190,46 +233,45 @@
         </div>
       </div>
     </div>
-    <!-- <button class="slide-change-btn prev">&#10094;</button> -->
-    <!-- <button class="slide-change-btn next">&#10095;</button> -->
-
+    
     <div class="dots-container">
       <span class="dot active"></span>
       <span class="dot"></span>
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
-
-
   </section>
 
-  <!-- hot Products section -->
   <section class="hot-products">
     <h2>🔥 Hot Products</h2>
     <div class="hot-products-grid">
       <?php 
-        require_once 'backend/Config/functions.php';
-        $conn = dbConnect();
-        $products = Random_products(10, $conn);
-        $product = $products[0];
+        // Functions.php is already included at the top, so we just use the function
+        // Note: Ensure Random_products function exists in your functions.php
+        // If not, you need to add it or use a simple SELECT query here.
+        if (function_exists('Random_products')) {
+            $products = Random_products(10, $conn);
+        } else {
+            // Fallback if function doesn't exist
+            $result = $conn->query("SELECT * FROM Product ORDER BY RAND() LIMIT 10");
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+        }
 
         foreach ($products as $product){
+          // Image placeholder logic if 'image' column is empty
+          $img = !empty($product['image']) ? $product['image'] : 'headphone1.png';
       ?>
       <a href="product page/product.php?id=<?php echo $product['product_id'];?>">
         <div class="product-card-premium">
-          <!-- <div class="wishlist-icon">
-          <img src="svg/Heart.svg" height="25px" alt=""></a>
-        </div> -->
           <div class="product-image-container-premium">
-            <img src="<?php echo $product['image'] ?>" height="200px" alt="<?php echo $product['title'] ?>"
+            <img src="<?php echo $img; ?>" height="200px" alt="<?php echo htmlspecialchars($product['title']); ?>"
               class="product-image-premium">
-
           </div>
           <div class="product-info-section">
-            <h3 class="product-title-premium"><?php echo $product['title'] ?></h3>
+            <h3 class="product-title-premium"><?php echo htmlspecialchars($product['title']); ?></h3>
             <div class="price-comparison-section">
-              <span class="current-price-premium"><small>Rs.</small><?php echo $product['price'] ?></span>
-              <span class="original-price-premium"><small>Rs.</small><?php echo $product['price'] + ($product['price']*0.1) ?></span>
+              <span class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
+              <span class="original-price-premium"><small>Rs.</small><?php echo number_format($product['price'] + ($product['price']*0.1)); ?></span>
             </div>
             <button class="add-to-cart-btn-premium">ADD TO CART</button>
           </div>
@@ -237,25 +279,18 @@
       </a>
       <?php
         }
-        $conn->close();
+        // Do not close connection here if you plan to use it later in the footer/scripts
         ?>
     </div>
   </section>
 
-  <!-- Banner  section -->
   <section class="promo-banner-section">
     <div class="promo-banner">
       <picture>
-        <!-- Mobile image -->
         <source srcset="assets/images/home-section/banner/geargo-banner-mobile.png" media="(max-width: 768px)">
-
-        <!-- Desktop image -->
         <source srcset="assets/images/home-section/banner/geargo-banner-pc.webp" media="(min-width: 769px)">
-
-        <!-- Fallback -->
         <img src="assets/images/home-section/banner/geargo-banner-pc.webp" alt="GearGo Wireless Earbuds">
       </picture>
-      <!-- TEXT OVERLAY -->
       <div class="banner-content">
         <span class="banner-tag">NEW ARRIVAL</span>
         <h2>Power Your Sound, Anywhere</h2>
@@ -265,7 +300,6 @@
     </div>
   </section>
 
-  <!-- Why Buy Section -->
   <section class="why-geargo">
     <h2>Why buy from <span>GearGo</span></h2>
 
@@ -307,7 +341,5 @@
   <script src="home.js"></script>
   <script src="cart/cart.js"></script>
 
-
 </body>
-
 </html>
