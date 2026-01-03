@@ -69,7 +69,7 @@ if ($isLoggedIn) {
                     $itemTotal = $item['price'] * $item['quantity'];
                     $cartTotal += $itemTotal;
                     // Placeholder image logic
-                    $imgSrc = !empty($item['image']) ? $item['image'] : "../headphone1.png";
+                    $imgSrc = !empty($item['image']) ? $item['image'] : "headphone1.png";
                     ?>
                     <div class="cart-item">
                         <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">

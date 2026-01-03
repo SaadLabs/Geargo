@@ -131,10 +131,10 @@ if ($isLoggedIn) {
                 <div class="nav-links-container" id="navContainer">
                     <ul class="nav-links">
                         <li><a href="../index.php">Home</a></li>
-                        <li><a href="#">Products</a></li>
+                        <li><a href="category.php">Products</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="../orders/orders.php">My Orders</a></li>
+                        <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
                     </ul>
                     <div class="mobile-menu-icons">
                         <a href="#" class="mobile-icon-link">
@@ -177,7 +177,7 @@ if ($isLoggedIn) {
         </nav>
 
         <div class="mobile-search-bar">
-            <form action="search/search.php" method="GET" class="search-box" style="position:relative;">
+            <form action="../search/search.php" method="GET" class="search-box" style="position:relative;">
                 <input name="search" id="mobileSearchInput" placeholder="Search" autocomplete="off" />
 
                 <button type="button" id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>

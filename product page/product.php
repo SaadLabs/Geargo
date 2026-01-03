@@ -131,7 +131,7 @@ if (!$display) {
                         <li><a href="../category/category.php">Products</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="../orders/orders.php">My Orders</a></li>
+                        <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
                     </ul>
                     <div class="mobile-menu-icons">
                         <a href="<?php echo $accountLink; ?>" class="mobile-icon-link">
