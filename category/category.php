@@ -1,7 +1,7 @@
 <?php
 // 1. Start Session and Include Functions
 // Adjust paths if your folder structure is different
-require_once '../Backend/config/session_manager.php'; 
+require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
@@ -12,8 +12,8 @@ $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
 
 // 3. Define Paths
 // IMPORTANT: Update this to the actual path of your login file
-$loginPagePath = "Login/user/login_user.php"; 
-$profilePagePath = "user profile/user.php";
+$loginPagePath = "../Login/user/login_user.php";
+$profilePagePath = "../user profile/user.php";
 
 // Determine where links should go
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
@@ -61,7 +61,7 @@ if ($isLoggedIn) {
                     $itemTotal = $item['price'] * $item['quantity'];
                     $cartTotal += $itemTotal;
                     // Placeholder image logic
-                    $imgSrc = "headphone1.png"; // Replace with $item['image'] if you add it to DB
+                    $imgSrc = !empty($item['image']) ? "../" . $item['image'] : "../headphone1.png";
                     ?>
                     <div class="cart-item">
                         <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
@@ -69,10 +69,18 @@ if ($isLoggedIn) {
                         <div class="cart-item-details">
                             <h4><?php echo htmlspecialchars($item['title']); ?></h4>
                             <p>Rs. <?php echo number_format($item['price']); ?></p>
-                            <input type="number" value="<?php echo $item['quantity']; ?>" min="1" readonly>
+
+                            <form action="../cart/update_quantity.php" method="POST" style="display:inline-block;">
+                                <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
+                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1"
+                                    onchange="this.form.submit()" style="width: 50px; padding: 5px;">
+                            </form>
                         </div>
 
-                        <button class="remove-btn">&times;</button>
+                        <form action="../cart/remove_cart_item.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
+                            <button type="submit" class="remove-btn">&times;</button>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             <?php elseif (!$isLoggedIn): ?>
@@ -90,7 +98,7 @@ if ($isLoggedIn) {
             </div>
 
             <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-                <form action="cart/checkout_action.php" method="POST">
+                <form action="../cart/checkout_action.php" method="POST">
                     <button type="submit" class="checkout-btn">Checkout</button>
                 </form>
             <?php else: ?>
@@ -163,14 +171,12 @@ if ($isLoggedIn) {
 
     <!--  ================= header end ================= -->
     <?php
-    require_once '../Backend/Config/functions.php';
-    $conn = dbConnect();
 
     // 1. Capture Inputs
     $category_id = isset($_GET['category']) ? $_GET['category'] : 'all';
     $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'default';
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-    $limit = 5; // As requested: 5 records per page
+    $limit = 10; // As requested: 5 records per page
     
     // 2. Fetch Data
     $categories = getCategories($conn);
@@ -219,14 +225,12 @@ if ($isLoggedIn) {
                 <?php if (count($products) > 0): ?>
                     <?php foreach ($products as $product): ?>
                         <?php
-                        // Placeholder image logic - update this if you add an 'image' column to DB
-                        $imgSrc = "../" . $product['image'];
-                        // Link to specific product page
-                        $productLink = "product-page/product.php?id=" . $product['product_id'];
+                        $imgSrc = !empty($product['image']) ? "../" . $product['image'] : "../headphone1.png";
+                        $productLink = "../product page/product.php?id=" . $product['product_id'];
                         ?>
 
-                        <a href="<?php echo $productLink; ?>">
-                            <div class="product-card-premium big-card">
+                        <div class="product-card-premium big-card">
+                            <a href="<?php echo $productLink; ?>" style="text-decoration:none; color:inherit;">
                                 <div class="product-image-container-premium">
                                     <img src="<?php echo $imgSrc; ?>" height="200px"
                                         alt="<?php echo htmlspecialchars($product['title']); ?>" class="product-image-premium">
@@ -239,14 +243,25 @@ if ($isLoggedIn) {
                                         <span
                                             class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
                                     </div>
-
-                                    <form action="../cart/add_to_cart.php" method="POST">
-                                        <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                                        <button type="submit" class="add-to-cart-btn-premium">ADD TO CART</button>
-                                    </form>
                                 </div>
+                            </a>
+
+                            <div class="product-info-section" style="padding-top:0;">
+                                <form action="../cart/add_to_cart.php" method="POST">
+                                    <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                                    <input type="hidden" name="quantity" value="1">
+
+                                    <?php if ($isLoggedIn): ?>
+                                        <button type="submit" class="add-to-cart-btn-premium">ADD TO CART</button>
+                                    <?php else: ?>
+                                        <button type="button" class="add-to-cart-btn-premium"
+                                            onclick="window.location.href='<?php echo $loginPagePath; ?>'">
+                                            ADD TO CART
+                                        </button>
+                                    <?php endif; ?>
+                                </form>
                             </div>
-                        </a>
+                        </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p style="grid-column: 1/-1; text-align: center;">No products found.</p>

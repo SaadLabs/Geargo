@@ -44,60 +44,69 @@ if ($isLoggedIn) {
 <body>
 
   <!-- ================= CART START ================= -->
-  <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
     <div id="cart-sidebar" class="cart-sidebar">
-    <div class="cart-header">
-      <h2>Your Cart</h2>
-      <span class="close-cart" onclick="closeCart()">×</span>
-    </div>
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <span class="close-cart" onclick="closeCart()">×</span>
+        </div>
 
-    <div class="cart-items" id="cartItems">
-      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-          <?php foreach ($cartItems as $item): ?>
-              <?php 
-                  $itemTotal = $item['price'] * $item['quantity'];
-                  $cartTotal += $itemTotal;
-                  // Placeholder image logic
-                  $imgSrc = "headphone1.png"; // Replace with $item['image'] if you add it to DB
-              ?>
-              <div class="cart-item">
-                <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
+        <div class="cart-items" id="cartItems">
+            <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+                <?php foreach ($cartItems as $item): ?>
+                    <?php
+                    $itemTotal = $item['price'] * $item['quantity'];
+                    $cartTotal += $itemTotal;
+                    // Placeholder image logic
+                    $imgSrc = !empty($item['image']) ? "../" . $item['image'] : "../headphone1.png";
+                    ?>
+                    <div class="cart-item">
+                        <img src="<?php echo $imgSrc; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
 
-                <div class="cart-item-details">
-                  <h4><?php echo htmlspecialchars($item['title']); ?></h4>
-                  <p>Rs. <?php echo number_format($item['price']); ?></p>
-                  <input type="number" value="<?php echo $item['quantity']; ?>" min="1" readonly>
-                </div>
+                        <div class="cart-item-details">
+                            <h4><?php echo htmlspecialchars($item['title']); ?></h4>
+                            <p>Rs. <?php echo number_format($item['price']); ?></p>
 
-                <button class="remove-btn">&times;</button>
+                            <form action="../cart/update_quantity.php" method="POST" style="display:inline-block;">
+                                <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
+                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1"
+                                    onchange="this.form.submit()" style="width: 50px; padding: 5px;">
+                            </form>
+                        </div>
+
+                        <form action="../cart/remove_cart_item.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
+                            <button type="submit" class="remove-btn">&times;</button>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            <?php elseif (!$isLoggedIn): ?>
+                <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to
+                    view your cart.</p>
+            <?php else: ?>
+                <p class="empty-cart" style="display:block;">Your cart is empty</p>
+            <?php endif; ?>
+        </div>
+
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <strong id="cartTotal">Rs. <?php echo number_format($cartTotal); ?></strong>
             </div>
-          <?php endforeach; ?>
-      <?php elseif (!$isLoggedIn): ?>
-          <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to view your cart.</p>
-      <?php else: ?>
-          <p class="empty-cart" style="display:block;">Your cart is empty</p>
-      <?php endif; ?>
-    </div>
 
-    <div class="cart-footer">
-      <div class="cart-total">
-        <span>Total:</span>
-        <strong id="cartTotal">Rs. <?php echo number_format($cartTotal); ?></strong>
-      </div>
-      
-      <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-          <form action="cart/checkout_action.php" method="POST">
-             <button type="submit" class="checkout-btn">Checkout</button>
-          </form>
-      <?php else: ?>
-          <button class="checkout-btn" onclick="window.location.href='<?php echo $loginPagePath; ?>'">
-            <?php echo $isLoggedIn ? 'Checkout' : 'Login to Checkout'; ?>
-          </button>
-      <?php endif; ?>
+            <?php if ($isLoggedIn && count($cartItems) > 0): ?>
+                <form action="../cart/checkout_action.php" method="POST">
+                    <button type="submit" class="checkout-btn">Checkout</button>
+                </form>
+            <?php else: ?>
+                <button class="checkout-btn" onclick="window.location.href='<?php echo $loginPagePath; ?>'">
+                    <?php echo $isLoggedIn ? 'Checkout' : 'Login to Checkout'; ?>
+                </button>
+            <?php endif; ?>
+        </div>
     </div>
-  </div>
-  <!-- ================= CART END ================= -->
+    <!-- ================= CART END ================= -->
 
   <!-- header section -->
   <header>
