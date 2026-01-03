@@ -5,19 +5,6 @@ require_once 'Backend/config/functions.php';
 
 $conn = dbConnect();
 
-// === NEW: AJAX HANDLER ===
-// If 'ajax_query' is in the URL, return JSON data and STOP loading the rest of the page.
-if (isset($_GET['ajax_query'])) {
-    $query = $_GET['ajax_query'];
-    $suggestions = getSearchSuggestions($conn, $query);
-
-    // Set header to JSON so JS understands it
-    header('Content-Type: application/json');
-    echo json_encode($suggestions);
-    exit(); // Important: Stop here so we don't load the HTML!
-}
-// =========================
-
 // 2. Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
@@ -148,15 +135,11 @@ if ($isLoggedIn) {
             </div>
 
             <div class="right-section">
-                <form action="search/search.php" method="GET" class="search-box desktop-search"
-                    style="position:relative;">
-                    <input name="search" id="searchInput" placeholder="Search" autocomplete="off">
-
+                <form action="category/category.php" method="GET" class="search-box desktop-search">
+                    <input name="search" id="searchInput" placeholder="Search">
                     <button type="button" id="clearBtn"><span class="material-symbols-outlined">close</span></button>
                     <div class="vline"></div>
                     <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
-
-                    <div id="searchResultsList" class="search-suggestions-box"></div>
                 </form>
 
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
@@ -173,15 +156,12 @@ if ($isLoggedIn) {
         </nav>
 
         <div class="mobile-search-bar">
-            <form action="search/search.php" method="GET" class="search-box" style="position:relative;">
-                <input name="search" id="mobileSearchInput" placeholder="Search" autocomplete="off" />
-
-                <button type="button" id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
+            <div class="search-box">
+                <input id="mobileSearchInput" placeholder="Search" />
+                <button id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
                 <div class="vline"></div>
-                <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
-
-                <div id="mobileSearchResultsList" class="search-suggestions-box"></div>
-            </form>
+                <button><span class="material-symbols-outlined search-icon">search</span></button>
+            </div>
         </div>
     </header>
 

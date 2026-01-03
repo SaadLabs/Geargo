@@ -5,6 +5,19 @@ require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
 
+// === NEW: AJAX HANDLER ===
+// If 'ajax_query' is in the URL, return JSON data and STOP loading the rest of the page.
+if (isset($_GET['ajax_query'])) {
+    $query = $_GET['ajax_query'];
+    $suggestions = getSearchSuggestions($conn, $query);
+
+    // Set header to JSON so JS understands it
+    header('Content-Type: application/json');
+    echo json_encode($suggestions);
+    exit(); // Important: Stop here so we don't load the HTML!
+}
+// =========================
+
 // 2. Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
@@ -39,7 +52,8 @@ if (!$display) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo htmlspecialchars($display['title']); ?> | GearGo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="../cart/cart.css">
@@ -70,7 +84,8 @@ if (!$display) {
                             <p>Rs. <?php echo number_format($item['price']); ?></p>
                             <form action="../cart/update_quantity.php" method="POST" style="display:inline-block;">
                                 <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
-                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" onchange="this.form.submit()" style="width: 50px; padding: 5px;">
+                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1"
+                                    onchange="this.form.submit()" style="width: 50px; padding: 5px;">
                             </form>
                         </div>
 
@@ -81,7 +96,8 @@ if (!$display) {
                     </div>
                 <?php endforeach; ?>
             <?php elseif (!$isLoggedIn): ?>
-                <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to view your cart.</p>
+                <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to
+                    view your cart.</p>
             <?php else: ?>
                 <p class="empty-cart" style="display:block;">Your cart is empty</p>
             <?php endif; ?>
@@ -133,29 +149,40 @@ if (!$display) {
             </div>
 
             <div class="right-section">
-                <form action="../category/category.php" method="GET" class="search-box desktop-search">
-                    <input name="search" id="searchInput" placeholder="Search">
+                <form action="../search/search.php" method="GET" class="search-box desktop-search"
+                    style="position:relative;">
+                    <input name="search" id="searchInput" placeholder="Search" autocomplete="off">
+
                     <button type="button" id="clearBtn"><span class="material-symbols-outlined">close</span></button>
                     <div class="vline"></div>
                     <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
+
+                    <div id="searchResultsList" class="search-suggestions-box"></div>
                 </form>
 
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>"><img src="../assets/svg/user.svg" alt=""></a>
-                <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
+                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>">
+                    <img src="../assets/svg/user.svg" alt="User Profile">
+                </a>
+
+                <a class="nav-svg" href="javascript:void(0)"
+                    onclick="<?php echo $isLoggedIn ? 'openCart()' : "window.location.href='$loginPagePath'"; ?>">
                     <img src="../assets/svg/cart.svg" alt="Cart">
                 </a>
             </div>
         </nav>
 
         <div class="mobile-search-bar">
-            <div class="search-box">
-                <input id="mobileSearchInput" placeholder="Search" />
-                <button id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
+            <form action="search/search.php" method="GET" class="search-box" style="position:relative;">
+                <input name="search" id="mobileSearchInput" placeholder="Search" autocomplete="off" />
+
+                <button type="button" id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
                 <div class="vline"></div>
-                <button><span class="material-symbols-outlined search-icon">search</span></button>
-            </div>
+                <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
+
+                <div id="mobileSearchResultsList" class="search-suggestions-box"></div>
+            </form>
         </div>
     </header>
 
@@ -176,15 +203,16 @@ if (!$display) {
                     </p>
 
                     <div class="actions" style="display: flex; gap: 10px;">
-                        
+
                         <form action="../cart/add_to_cart.php" method="POST" style="flex: 1;">
                             <input type="hidden" name="product_id" value="<?php echo $display['product_id']; ?>">
                             <input type="hidden" name="quantity" value="1">
-                            
+
                             <?php if ($isLoggedIn): ?>
                                 <button type="submit" class="btn btn-cart" style="width: 100%;">Add to Cart</button>
                             <?php else: ?>
-                                <button type="button" class="btn btn-cart" style="width: 100%;" onclick="window.location.href='<?php echo $loginPagePath; ?>'">Add to Cart</button>
+                                <button type="button" class="btn btn-cart" style="width: 100%;"
+                                    onclick="window.location.href='<?php echo $loginPagePath; ?>'">Add to Cart</button>
                             <?php endif; ?>
                         </form>
 
@@ -202,32 +230,38 @@ if (!$display) {
                     foreach ($products as $product) {
                         $relImg = !empty($product['image']) ? '../' . $product['image'] : '../headphone1.png';
                         $productLink = "../product page/product.php?id=" . $product['product_id'];
-                    ?>
+                        ?>
 
                         <div class="product-card-premium">
                             <div class="product-image-container-premium">
                                 <a href="<?php echo $productLink; ?>">
-                                    <img src="<?php echo $relImg; ?>" height="200px" alt="<?php echo htmlspecialchars($product['title']); ?>" class="product-image-premium">
+                                    <img src="<?php echo $relImg; ?>" height="200px"
+                                        alt="<?php echo htmlspecialchars($product['title']); ?>"
+                                        class="product-image-premium">
                                 </a>
                             </div>
 
                             <div class="product-info-section">
                                 <a href="<?php echo $productLink; ?>" style="text-decoration:none; color:inherit;">
-                                    <h3 class="product-title-premium"><?php echo htmlspecialchars($product['title']); ?></h3>
+                                    <h3 class="product-title-premium"><?php echo htmlspecialchars($product['title']); ?>
+                                    </h3>
                                     <div class="price-comparison-section">
-                                        <span class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
-                                        <span class="original-price-premium"><small>Rs.</small><?php echo number_format($product['price'] + ($product['price'] * 0.1)); ?></span>
+                                        <span
+                                            class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
+                                        <span
+                                            class="original-price-premium"><small>Rs.</small><?php echo number_format($product['price'] + ($product['price'] * 0.1)); ?></span>
                                     </div>
                                 </a>
-                                
+
                                 <form action="../cart/add_to_cart.php" method="POST">
                                     <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                     <input type="hidden" name="quantity" value="1">
-                                    
+
                                     <?php if ($isLoggedIn): ?>
                                         <button type="submit" class="add-to-cart-btn-premium">ADD TO CART</button>
                                     <?php else: ?>
-                                        <button type="button" class="add-to-cart-btn-premium" onclick="window.location.href='<?php echo $loginPagePath; ?>'">ADD TO CART</button>
+                                        <button type="button" class="add-to-cart-btn-premium"
+                                            onclick="window.location.href='<?php echo $loginPagePath; ?>'">ADD TO CART</button>
                                     <?php endif; ?>
                                 </form>
                             </div>
@@ -240,6 +274,7 @@ if (!$display) {
     </section>
 </body>
 
+<script src="product.js"></script>
 <script src="../cart/cart.js"></script>
 
 </html>

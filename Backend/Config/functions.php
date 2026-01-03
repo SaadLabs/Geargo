@@ -167,4 +167,65 @@ function getUserOrders($conn, $user_id) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+
+//search suggestions for ajax
+function getSearchSuggestions($conn, $query) {
+    // Sanitize input
+    $searchTerm = "%" . $query . "%";
+    
+    // SQL Query: Get ID, Title, Image, Price (Limit 5 results)
+    $sql = "SELECT product_id, title, image, price FROM Product WHERE title LIKE ? LIMIT 5";
+    
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return [];
+    }
+    
+    $stmt->bind_param("s", $searchTerm);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $suggestions = [];
+    while($row = $result->fetch_assoc()) {
+        $suggestions[] = $row;
+    }
+    
+    return $suggestions;
+}
+
+// Backend/config/functions.php
+
+function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
+    $offset = ($page - 1) * $limit;
+    $term = "%" . $searchTerm . "%";
+
+    // Search in Title OR Description
+    $sql = "SELECT * FROM Product WHERE title LIKE ? OR description LIKE ?";
+
+    // Add Sorting
+    if ($sort == 'price_low_high') {
+        $sql .= " ORDER BY price ASC";
+    } 
+    elseif ($sort == 'price_high_low') {
+        $sql .= " ORDER BY price DESC";
+    } 
+    else {
+        $sql .= " ORDER BY title ASC"; // Default sort
+    }
+
+    $sql .= " LIMIT ? OFFSET ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssii", $term, $term, $limit, $offset);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $products = $result->fetch_all(MYSQLI_ASSOC);
+
+    // Calculate Total Pages
+    $totalResult = $conn->query("SELECT FOUND_ROWS() as count");
+    $totalRows = $totalResult->fetch_assoc()['count'];
+    $totalPages = ceil($totalRows / $limit);
+
+    return ['products' => $products, 'totalPages' => $totalPages];
+}
 ?>
