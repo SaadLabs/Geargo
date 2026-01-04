@@ -86,7 +86,6 @@ if ($stmt->execute()) {
             $payStmt->close();
         }
     }
-    // Note: For COD, we usually don't insert a payment record until the cash is actually received.
 
     // ==============================================================================
     // CHANGE 3: Move Items & Clear Cart (Same as before)

@@ -222,7 +222,6 @@ $hasCards = count($savedCards) > 0;
             <h2>Payment Method</h2>
             <select id="paymentMethod" name="payment_method" required>
                 <option value="">Select Payment Method</option>
-                <option value="COD">Cash on Delivery</option>
                 <option value="Card">Card</option>
             </select>
             <span class="error" id="paymentMethodError"></span>
