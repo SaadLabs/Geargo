@@ -215,9 +215,6 @@ if ($isLoggedIn) {
               </div>
               <div class="order-number">
                 <span class="label">Order # <?php echo $order['order_id']; ?></span>
-                <div class="header-links">
-                  <a href="#">View Details</a> | <a href="#">Invoice</a>
-                </div>
               </div>
             </div>
 
@@ -248,10 +245,10 @@ if ($isLoggedIn) {
                       <?php echo number_format($item['price_at_purchase']); ?></p>
 
                     <div class="action-buttons">
-                      <button class="btn-primary">Track Package</button>
                       <form action="../cart/add_to_cart.php" method="POST" style="display:inline;">
                         <input type="hidden" name="product_id" value="<?php echo $item['product_id']; ?>">
                         <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="buy_now" value="true">
                         <button type="submit" class="btn-secondary">Buy it again</button>
                       </form>
                     </div>

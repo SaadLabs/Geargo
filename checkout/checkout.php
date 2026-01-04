@@ -301,10 +301,6 @@ $hasCards = count($savedCards) > 0;
         <script>alert("<?php echo addslashes($_SESSION['error']); ?>"); <?php unset($_SESSION['error']); ?></script>
     <?php endif; ?>
 
-    <?php if (isset($_SESSION['success'])): ?>
-        <script>alert("<?php echo addslashes($_SESSION['success']); ?>"); <?php unset($_SESSION['success']); ?></script>
-    <?php endif; ?>
-
 </body>
 
 </html>

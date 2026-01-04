@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $clean_filename = preg_replace("/[^a-zA-Z0-9.]/", "_", $filename);
         
         // Correct Destination with slash (/)
-        $destination = "../assets/uploads/" . $user_id . "_" . $clean_filename;
+        $destination = "../assets/uploads/" . $user_id;
 
         // Validation: Size (< 10MB) and Type (image/jpeg, image/png)
         if ($file_size < 10000000 && ($file_type == "image/jpeg" || $file_type == "image/png" || $file_type == "image/jpg")) {

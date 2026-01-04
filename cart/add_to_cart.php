@@ -52,7 +52,7 @@ try {
         // Update existing quantity
         $itemRow = $resultItem->fetch_assoc();
         $new_qty = $itemRow['quantity'] + $quantity;
-        
+
         $updateSql = "UPDATE CartItem SET quantity = ? WHERE cart_item_id = ?";
         $stmtUpdate = $conn->prepare($updateSql);
         $stmtUpdate->bind_param("ii", $new_qty, $itemRow['cart_item_id']);
@@ -63,6 +63,11 @@ try {
         $stmtInsert = $conn->prepare($insertSql);
         $stmtInsert->bind_param("iii", $cart_id, $product_id, $quantity);
         $stmtInsert->execute();
+    }
+
+    if (isset($_POST['buy_now']) && $_POST['buy_now'] == 'true') {
+        header("Location: ../checkout/checkout.php");
+        exit();
     }
 
     // 4. Redirect back

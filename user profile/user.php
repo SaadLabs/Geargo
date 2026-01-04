@@ -283,7 +283,7 @@ $paymentMethods = getUserPaymentMethods($conn, $user_id);
                 <div class="section" id="addPaymentForm" style="display:none;">
                     <h3>Add New Card</h3>
                     <form action="add_payment_action.php" method="POST">
-                        <label>Name on Card</label>
+                        <label>Name on C1ard</label>
                         <input type="text" name="card_name" placeholder="John Doe" required>
 
                         <label>Card Number</label>
@@ -321,11 +321,11 @@ $paymentMethods = getUserPaymentMethods($conn, $user_id);
                                 <?php foreach ($orders as $order): ?>
                                     <tr>
                                         <td>#GG<?php echo $order['order_id']; ?></td>
-                                        <td><?php echo date("d M Y", strtotime($order['created_at'])); ?></td>
+                                        <td><?php echo date("d M Y", strtotime($order['order_date'])); ?></td>
                                         <td>
                                             <span
-                                                style="<?php echo ($order['status'] == 'pending') ? 'color:orange;' : 'color:green;'; ?>">
-                                                <?php echo ucfirst($order['status']); ?>
+                                                style="<?php echo ($order['order_status'] == 'pending') ? 'color:orange;' : 'color:green;'; ?>">
+                                                <?php echo ucfirst($order['order_status']); ?>
                                             </span>
                                         </td>
                                         <td>Rs. <?php echo number_format($order['total_amount']); ?></td>

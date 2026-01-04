@@ -15,11 +15,11 @@ $card_id = $_POST['card_id'];
 
 // 2. Delete the card ONLY if it belongs to the logged-in user
 // This AND user_id = ? check is crucial for security!
-$sql = "DELETE FROM usercard WHERE card_id = ? AND user_id = ?";
+$sql = "UPDATE usercard SET is_active = 0 WHERE card_id = ?";
 
 $stmt = $conn->prepare($sql);
 if ($stmt) {
-    $stmt->bind_param("ii", $card_id, $user_id);
+    $stmt->bind_param("i", $card_id);
     
     if ($stmt->execute()) {
         $_SESSION['success'] = "Payment method removed successfully.";

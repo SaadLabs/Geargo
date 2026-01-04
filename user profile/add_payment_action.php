@@ -17,8 +17,10 @@ $number = $_POST['card_number'];
 $expiry = $_POST['expiry'];         
 $cvv = $_POST['cvv'];               
 
-// 2. Process Expiry
+// 2. Process Expiry and card number
 $expiry_parts = explode('/', $expiry);
+$number = str_replace(' ', '', $_POST['card_number']); 
+
 if (count($expiry_parts) == 2) {
     $exp_month = intval($expiry_parts[0]);
     $exp_year = intval('20' . $expiry_parts[1]); 

@@ -11,112 +11,118 @@ if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] != 'POST') {
 $conn = dbConnect();
 $user_id = $_SESSION['user_id'];
 
-// 1. Capture Common Inputs
+// 1. Capture Inputs
 $full_name = $_POST['full_name'];
-$email = $_POST['email'];
-$phone = $_POST['phone'];
-$address = $_POST['address'];
-$payment_method = $_POST['payment_method'];
+$address = $_POST['address']; 
+$payment_method = $_POST['payment_method']; // 'Card' or 'COD'
 $total_amount = $_POST['total_amount'];
 
-// 2. PAYMENT VERIFICATION LOGIC
+// Variable to store the ID of the card used (if paying by card)
+$verified_card_id = null;
+
+// 2. PAYMENT VERIFICATION (Card Only)
 if ($payment_method === 'Card') {
-
-    // Inputs from form
-    //$input_number = str_replace(' ', '', $_POST['card_number']); // Remove spaces
-    $input_number = $_POST['card_number'];
+    $input_number = str_replace(' ', '', $_POST['card_number']); 
     $input_cvv = $_POST['card_cvv'];
-
-    // Fetch all saved cards for this user
+    
+    // Fetch user's saved cards
     $savedCards = getUserPaymentMethods($conn, $user_id);
-
     $isVerified = false;
 
-    // Loop through saved cards and try to find a match
     foreach ($savedCards as $card) {
-        // Since we stored cards using password_hash, we use password_verify
-        // Verify Card Number AND CVV
-        if (
-            password_verify($input_number, $card['card_number']) &&
-            password_verify($input_cvv, $card['cvv'])
-        ) {
-
+        // Match user input against hashed database values
+        if (password_verify($input_number, $card['card_number']) && 
+            password_verify($input_cvv, $card['cvv'])) {
+            
             $isVerified = true;
-            break; // Found a match, stop looking
+            $verified_card_id = $card['card_id']; // CAPTURE THE ID!
+            break; 
         }
     }
 
     if (!$isVerified) {
-        $_SESSION['error'] = "Card verification failed. The details entered do not match any saved card in your profile.";
+        $_SESSION['error'] = "Card verification failed! Details do not match your saved cards.";
         header("Location: checkout.php");
         exit();
     }
 }
 
-// 3. IF VERIFIED (OR COD), PLACE ORDER
-// A. Insert into Orders Table
-// Note: Ensure your 'Orders' table columns match this!
-$order_status = ($payment_method == 'Card') ? 'paid' : 'pending'; // Example logic
+// 3. PLACE ORDER
+// ==============================================================================
+// CHANGE 1: Order Status is now 'Processing' for new orders (not 'paid' or 'shipped')
+// ==============================================================================
+$order_status = 'Processing'; 
 
+// Insert Order
 $sql = "INSERT INTO `order` (user_id, total_amount, order_status, shipping_address) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    $_SESSION['error'] = "Order Error: " . $conn->error;
+    $_SESSION['error'] = "SQL Error: " . $conn->error;
     header("Location: checkout.php");
     exit();
 }
 
-$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address);
+$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address,);
 
 if ($stmt->execute()) {
-    $order_id = $stmt->insert_id; // Get the ID of the new order
+    $order_id = $stmt->insert_id;
     $stmt->close();
 
-    // B. Move Items from Cart to Order_Items
-    $cartItems = getCartItems($conn, $user_id);
+    // ==============================================================================
+    // CHANGE 2: Record the Payment in 'payment' table (Only for Card)
+    // ==============================================================================
+    if ($payment_method === 'Card' && $verified_card_id !== null) {
+        $payment_status = 'Completed'; // Since verification passed
+        
+        // Columns: payment_id (Auto), order_id, card_id, amount, payment_status, paid_at (Default NOW)
+        $paySql = "INSERT INTO payment (order_id, card_id, amount, payment_status) VALUES (?, ?, ?, ?)";
+        $payStmt = $conn->prepare($paySql);
+        
+        if ($payStmt) {
+            // Types: i (int), i (int), d (decimal), s (string)
+            $payStmt->bind_param("iids", $order_id, $verified_card_id, $total_amount, $payment_status);
+            $payStmt->execute();
+            $payStmt->close();
+        }
+    }
+    // Note: For COD, we usually don't insert a payment record until the cash is actually received.
 
-    $itemSql = "INSERT INTO orderitem (order_id, product_id, price_at_purchase, quantity) VALUES (?, ?, ?, ?)";
+    // ==============================================================================
+    // CHANGE 3: Move Items & Clear Cart (Same as before)
+    // ==============================================================================
+    
+    // Move Cart Items -> Order Items
+    $cartItems = getCartItems($conn, $user_id);
+    $itemSql = "INSERT INTO orderitem (order_id, product_id, quantity, price_at_purchase) VALUES (?, ?, ?, ?)";
     $itemStmt = $conn->prepare($itemSql);
 
     foreach ($cartItems as $item) {
-        $itemStmt->bind_param("iidi", $order_id, $item['product_id'], $item['price'], $item['quantity']);
+        $itemStmt->bind_param("iiid", $order_id, $item['product_id'], $item['quantity'], $item['price']);
         $itemStmt->execute();
     }
     $itemStmt->close();
 
-    // C. Clear User's Cart (Empty items only)
-    // ---------------------------------------------------------
-
-    // 1. Find the User's Cart ID
-    $getCartIdSql = "SELECT cart_id FROM cart WHERE user_id = ?";
+    // Empty Cart (Delete Children First logic)
+    // 1. Get Cart ID
+    $getCartIdSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
     $stmtCart = $conn->prepare($getCartIdSql);
     $stmtCart->bind_param("i", $user_id);
     $stmtCart->execute();
     $cartResult = $stmtCart->get_result();
-
+    
     if ($cartRow = $cartResult->fetch_assoc()) {
         $cart_id = $cartRow['cart_id'];
-
-        // 2. Delete ONLY the items inside this cart
-        // We do NOT delete the Cart row itself
-        $clearItemsSql = "DELETE FROM cartitem WHERE cart_id = ?";
+        
+        // 2. Delete items
+        $clearItemsSql = "DELETE FROM CartItem WHERE cart_id = ?";
         $stmtItems = $conn->prepare($clearItemsSql);
         $stmtItems->bind_param("i", $cart_id);
         $stmtItems->execute();
         $stmtItems->close();
     }
     $stmtCart->close();
-
-    // ---------------------------------------------------------
-
-    $_SESSION['success'] = "Order #$order_id placed successfully!";
     header("Location: ../orders/orders.php");
-    exit();
-
-    // D. Success!
-    $_SESSION['success'] = "Order placed successfully! Order ID: #GG" . $order_id;
-    header("Location: ../orders/orders.php"); // Send them to My Orders page
     exit();
 
 } else {

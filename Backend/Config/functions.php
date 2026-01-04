@@ -257,7 +257,7 @@ function getUserOrders($conn, $user_id) {
 }
 
 function getUserPaymentMethods($conn, $user_id) {
-    $sql = "SELECT * FROM usercard WHERE user_id = ?";
+    $sql = "SELECT * FROM usercard WHERE user_id = ? AND is_active = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();

@@ -134,7 +134,7 @@ if ($isLoggedIn) {
                         <li><a href="category.php">Products</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
-                        <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
+                        <li><a href="<?php echo $isLoggedIn ? '../orders/orders.php' : $loginPagePath; ?>">My Orders</a>
                     </ul>
                     <div class="mobile-menu-icons">
                         <a href="#" class="mobile-icon-link">
