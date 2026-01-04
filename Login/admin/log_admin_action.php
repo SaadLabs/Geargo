@@ -1,47 +1,75 @@
 <?php
+session_start(); 
 require_once("../../Backend/config/functions.php");
 
 $conn = dbConnect();
 
-$email = $_POST["email"];
+if (!$conn) {
+    $error = urlencode("Database connection failed.");
+    header("Location: login_admin.php?error=$error");
+    exit;
+}
+
+$email = trim($_POST["email"]);
 $password = $_POST["password"];
 
-if ($conn) {
-    // Check if email exists
-    $sql = "SELECT * FROM user WHERE email=?";
-    $stmt = $conn->prepare($sql);
+$sql = "SELECT * FROM user WHERE email = ?";
+$stmt = $conn->prepare($sql);
+
+if ($stmt) {
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows == 0) {
-        header("Location: login_admin.php?error=" . urlencode("No record found"));
-        $conn->close();
+    if ($result->num_rows === 1) {
+        $record = $result->fetch_assoc();
+
+        // Verify Password
+        if (password_verify($password, $record["password"])) {
+            
+            // Check Role and Redirect Accordingly
+            $role = strtolower(trim($record["role"])); // Normalize role string
+
+            if ($role === 'admin') {
+                // 1. Handle Admin
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $record['user_id'];
+                $_SESSION['role'] = 'admin';
+                
+                header("Location: ../../admin/super-admin/admin.php");
+                exit;
+
+            } elseif ($role === 'staff') {
+                // 2. Handle Staff
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $record['user_id'];
+                $_SESSION['role'] = 'staff';
+                
+                header("Location: ../../admin/staff/staff.php");
+                exit;
+
+            } else {
+                // 3. Handle Unauthorized Users (e.g., 'customer')
+                $error = urlencode("Access Denied: You are not authorized to access this panel.");
+                header("Location: login_admin.php?error=$error");
+                exit;
+            }
+
+        } else {
+            // Wrong Password
+            header("Location: login_admin.php?error=" . urlencode("Invalid Password."));
+            exit;
+        }
+    } else {
+        // Email not found
+        header("Location: login_admin.php?error=" . urlencode("No account found with this email."));
         exit;
     }
-
-    $record = $result->fetch_assoc();
-
-    if (!password_verify($password, $record["password"])) {
-        header("Location: login_admin.php?error=" . urlencode("Invalid Password. Please try again."));
-        $conn->close();
-        exit;
-    }
-
-    if ($record["role"] != "admin"){
-        header("Location: login_admin.php?error=" . urlencode("This is not admin's record"));
-        $conn->close();
-        exit;
-    }
-
-    // Redirect to homepage
-    header("Location: ../../index.php");
-    $conn->close();
-    exit;
-} 
-else {
-    $error = urlencode("Something went wrong. Please try again.");
-    header("Location: login_user.php?error=$error");
+    $stmt->close();
+} else {
+    header("Location: login_admin.php?error=" . urlencode("System error."));
     exit;
 }
+
+$conn->close();
 ?>

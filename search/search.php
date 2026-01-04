@@ -5,6 +5,19 @@ require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
 
+// === NEW: AJAX HANDLER ===
+// If 'ajax_query' is in the URL, return JSON data and STOP loading the rest of the page.
+if (isset($_GET['ajax_query'])) {
+    $query = $_GET['ajax_query'];
+    $suggestions = getSearchSuggestions($conn, $query);
+
+    // Set header to JSON so JS understands it
+    header('Content-Type: application/json');
+    echo json_encode($suggestions);
+    exit(); // Important: Stop here so we don't load the HTML!
+}
+// =========================
+
 // 2. Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
@@ -75,7 +88,8 @@ if (!empty($search_query)) {
                             <p>Rs. <?php echo number_format($item['price']); ?></p>
                             <form action="../cart/update_quantity.php" method="POST" style="display:inline-block;">
                                 <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
-                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" onchange="this.form.submit()" style="width: 50px; padding: 5px;">
+                                <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1"
+                                    onchange="this.form.submit()" style="width: 50px; padding: 5px;">
                             </form>
                         </div>
                         <form action="../cart/remove_cart_item.php" method="POST" style="display:inline;">
@@ -85,7 +99,8 @@ if (!empty($search_query)) {
                     </div>
                 <?php endforeach; ?>
             <?php elseif (!$isLoggedIn): ?>
-                <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to view your cart.</p>
+                <p class="empty-cart" style="display:block;">Please <a href="<?php echo $loginPagePath; ?>">login</a> to
+                    view your cart.</p>
             <?php else: ?>
                 <p class="empty-cart" style="display:block;">Your cart is empty</p>
             <?php endif; ?>
@@ -132,42 +147,61 @@ if (!empty($search_query)) {
                 </div>
             </div>
             <div class="right-section">
-                <form action="search.php" method="GET" class="search-box desktop-search">
-                    <input name="search" id="searchInput" placeholder="Search" value="<?php echo htmlspecialchars($search_query); ?>">
+                <form action="search.php" method="GET" class="search-box desktop-search"
+                    style="position:relative;">
+                    <input name="search" id="searchInput" placeholder="Search" autocomplete="off">
+
                     <button type="button" id="clearBtn"><span class="material-symbols-outlined">close</span></button>
                     <div class="vline"></div>
                     <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
+
+                    <div id="searchResultsList" class="search-suggestions-box"></div>
                 </form>
+
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
-                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>"><img src="../assets/svg/user.svg" alt=""></a>
-                <a class="nav-svg" href="javascript:void(0)" onclick="openCart()">
+
+                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>">
+                    <img src="../assets/svg/user.svg" alt="User Profile">
+                </a>
+
+                <a class="nav-svg" href="javascript:void(0)"
+                    onclick="<?php echo $isLoggedIn ? 'openCart()' : "window.location.href='$loginPagePath'"; ?>">
                     <img src="../assets/svg/cart.svg" alt="Cart">
                 </a>
             </div>
         </nav>
+
         <div class="mobile-search-bar">
-            <div class="search-box">
-                <input id="mobileSearchInput" placeholder="Search" />
-                <button id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
+            <form action="search/search.php" method="GET" class="search-box" style="position:relative;">
+                <input name="search" id="mobileSearchInput" placeholder="Search" autocomplete="off" />
+
+                <button type="button" id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
                 <div class="vline"></div>
-                <button><span class="material-symbols-outlined search-icon">search</span></button>
-            </div>
+                <button type="submit"><span class="material-symbols-outlined search-icon">search</span></button>
+
+                <div id="mobileSearchResultsList" class="search-suggestions-box"></div>
+            </form>
         </div>
     </header>
 
     <div class="page-container">
-        
+
         <div class="shop-top-bar">
             <div style="flex-grow: 1;">
                 <h2>Search Results for: "<?php echo htmlspecialchars($search_query); ?>"</h2>
             </div>
-            
+
             <div class="filter-box">
                 <label>Sort By</label>
                 <select id="sortFilter" onchange="applyFilters()">
-                    <option value="default" <?php if ($sort_by == 'default') echo 'selected'; ?>>Default</option>
-                    <option value="price_low_high" <?php if ($sort_by == 'price_low_high') echo 'selected'; ?>>Price: Low to High</option>
-                    <option value="price_high_low" <?php if ($sort_by == 'price_high_low') echo 'selected'; ?>>Price: High to Low</option>
+                    <option value="default" <?php if ($sort_by == 'default')
+                        echo 'selected'; ?>>Default</option>
+                    <option value="price_low_high" <?php if ($sort_by == 'price_low_high')
+                        echo 'selected'; ?>>Price: Low
+                        to High</option>
+                    <option value="price_high_low" <?php if ($sort_by == 'price_high_low')
+                        echo 'selected'; ?>>Price: High
+                        to Low</option>
                 </select>
             </div>
         </div>
@@ -183,12 +217,14 @@ if (!empty($search_query)) {
                         <div class="product-card-premium big-card">
                             <a href="<?php echo $productLink; ?>" style="text-decoration:none; color:inherit;">
                                 <div class="product-image-container-premium">
-                                    <img src="<?php echo $imgSrc; ?>" height="200px" alt="<?php echo htmlspecialchars($product['title']); ?>" class="product-image-premium">
+                                    <img src="<?php echo $imgSrc; ?>" height="200px"
+                                        alt="<?php echo htmlspecialchars($product['title']); ?>" class="product-image-premium">
                                 </div>
                                 <div class="product-info-section">
                                     <h3 class="product-title-premium"><?php echo htmlspecialchars($product['title']); ?></h3>
                                     <div class="price-comparison-section">
-                                        <span class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
+                                        <span
+                                            class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
                                     </div>
                                 </div>
                             </a>
@@ -199,7 +235,8 @@ if (!empty($search_query)) {
                                     <?php if ($isLoggedIn): ?>
                                         <button type="submit" class="add-to-cart-btn-premium">ADD TO CART</button>
                                     <?php else: ?>
-                                        <button type="button" class="add-to-cart-btn-premium" onclick="window.location.href='<?php echo $loginPagePath; ?>'">ADD TO CART</button>
+                                        <button type="button" class="add-to-cart-btn-premium"
+                                            onclick="window.location.href='<?php echo $loginPagePath; ?>'">ADD TO CART</button>
                                     <?php endif; ?>
                                 </form>
                             </div>
@@ -215,8 +252,8 @@ if (!empty($search_query)) {
 
         <?php if ($totalPages > 1): ?>
             <div class="pagination">
-                <?php 
-                    $prefix = "?search=" . urlencode($search_query) . "&sort=$sort_by&page=";
+                <?php
+                $prefix = "?search=" . urlencode($search_query) . "&sort=$sort_by&page=";
                 ?>
 
                 <?php if ($page > 1): ?>
@@ -241,13 +278,15 @@ if (!empty($search_query)) {
             const sort = document.getElementById('sortFilter').value;
             const urlParams = new URLSearchParams(window.location.search);
             const search = urlParams.get('search') || '';
-            
+
             // Keep the search term, just change sort
             window.location.href = `?search=${search}&sort=${sort}&page=1`;
         }
     </script>
 
     <script src="../cart/cart.js"></script>
-    <script src="../category/category.js"></script> 
+    <script src="../category/category.js"></script>
+    <script src="search.js"></script>
 </body>
+
 </html>

@@ -16,14 +16,17 @@ body {
     border: 1px solid #ccc;
 }
 
-/* Sidebar */
 .sidebar {
-    width: 240px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;  
+    width: 260px;    
+    overflow-y: auto; 
+    z-index: 1000; 
+    padding: 20px;
     background: #0d6efd;
     color: white;
-    height: 100vh;
-    padding: 20px;
-    flex-shrink: 0;
 }
 
 .logo {
@@ -51,11 +54,12 @@ body {
     background: #dc3545;
 }
 
-/* Main */
 .main {
-    flex: 1;
+    margin-left: 260px;
+    width: calc(100% - 260px); 
     padding: 25px;
     background: #f5f7fb;
+    min-height: 100vh; 
 }
 
 
@@ -143,14 +147,17 @@ button {
 }
 
 .btn-edit {
-    background: #198754;
+    background: #0d6efd;
+    padding: 0.1vw 0.4vw;
     color: white;
+    border-radius: 0.2vw;
 }
 
 .btn-delete {
     background: #dc3545;
     color: white;
 }
+
 .btn-remove {
     background: #6c757d;
     color: white;
@@ -206,4 +213,23 @@ button {
 
 #staffRole {
     margin-bottom: 5px;
+}
+
+/* Visual style for soft-deleted products */
+.inactive-row {
+    background-color: #f8d7da !important;
+    /* Light Red background */
+    color: #721c24;
+    /* Dark red text */
+    opacity: 0.8;
+}
+
+/* Optional: Strike-through text to make it obvious */
+.inactive-row td {
+    text-decoration: line-through;
+}
+
+/* But don't strike-through the buttons! */
+.inactive-row td:last-child {
+    text-decoration: none;
 }

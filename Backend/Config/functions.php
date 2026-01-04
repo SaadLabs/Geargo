@@ -163,7 +163,7 @@ function getSearchSuggestions($conn, $query) {
     $searchTerm = "%" . $query . "%";
     
     // SQL Query: Get ID, Title, Image, Price (Limit 5 results)
-    $sql = "SELECT product_id, title, image, price FROM Product WHERE title LIKE ? LIMIT 5";
+    $sql = "SELECT product_id, title, image, price FROM Product WHERE is_active = 1 AND title LIKE ? LIMIT 5";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -187,7 +187,7 @@ function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
     $term = "%" . $searchTerm . "%";
 
     // Search in Title OR Description
-    $sql = "SELECT * FROM Product WHERE title LIKE ? OR description LIKE ?";
+    $sql = "SELECT * FROM Product WHERE is_active = 1 AND (title LIKE ? OR description LIKE ?)";
 
     // Add Sorting
     if ($sort == 'price_low_high') {
