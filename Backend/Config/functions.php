@@ -157,17 +157,6 @@ function getCartItems($conn, $user_id) {
     }
 }
 
-// Fetch User's Order History
-function getUserOrders($conn, $user_id) {
-    // Note: 'Order' is a reserved keyword in SQL, so we use backticks `Order`
-    $sql = "SELECT * FROM `Order` WHERE user_id = ? ORDER BY created_at DESC";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
-
 //search suggestions for ajax
 function getSearchSuggestions($conn, $query) {
     // Sanitize input
@@ -192,8 +181,6 @@ function getSearchSuggestions($conn, $query) {
     
     return $suggestions;
 }
-
-// Backend/config/functions.php
 
 function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
     $offset = ($page - 1) * $limit;
@@ -228,4 +215,54 @@ function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
 
     return ['products' => $products, 'totalPages' => $totalPages];
 }
+
+// Order history
+function getUserOrders($conn, $user_id) {
+    $orders = [];
+    
+    // 1. Fetch the main Orders
+    $sql = "SELECT order_id, total_amount, order_date, order_status, shipping_address 
+            FROM `order`    
+            WHERE user_id = ? 
+            ORDER BY order_date DESC";
+            
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) return [];
+    
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($row = $result->fetch_assoc()) {
+        $order_id = $row['order_id'];
+        
+        // 2. For each order, fetch the Items + Product Details
+        $itemSql = "SELECT oi.quantity, oi.price_at_purchase, p.product_id, p.title, p.image 
+                    FROM orderitem oi 
+                    JOIN product p ON oi.product_id = p.product_id 
+                    WHERE oi.order_id = ?";
+                    
+        $itemStmt = $conn->prepare($itemSql);
+        $itemStmt->bind_param("i", $order_id);
+        $itemStmt->execute();
+        $itemResult = $itemStmt->get_result();
+        
+        // Add items array to the order row
+        $row['items'] = $itemResult->fetch_all(MYSQLI_ASSOC);
+        
+        $orders[] = $row;
+    }
+    
+    return $orders;
+}
+
+function getUserPaymentMethods($conn, $user_id) {
+    $sql = "SELECT * FROM usercard WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+
 ?>

@@ -130,12 +130,12 @@
           border: none;
           border-radius: 25px;
           position: relative;
-          overflow: hidden;
+          overflow: visible;
           display: flex;
 
       }
 
-      .search-box::after {
+      /* .search-box::after {
           content: "";
           position: absolute;
           bottom: 0;
@@ -145,7 +145,7 @@
           background: #1a73e8;
           transform: translateY(100%);
           transition: 0.2s;
-      }
+      } */
 
       .search-box:focus-within::after {
           transform: translateY(0);

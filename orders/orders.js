@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (query.length > 1) {
           // Fetch data from index.php
-          fetch(`product.php?ajax_query=${query}`)
+          fetch(`orders.php?ajax_query=${query}`)
             .then(response => response.json())
             .then(data => {
               resultsBox.innerHTML = ''; // Clear old results
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   a.href = `../product page/product.php?id=${product.product_id}`;
                   a.classList.add('suggestion-item');
 
-                  let imgPath = product.image ? "../" + product.image : '../headphone1.png';
+                  let imgPath = product.image ? "../" + product.image : 'headphone1.png';
 
                   a.innerHTML = `
                       <img src="${imgPath}" alt="${product.title}">

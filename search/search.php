@@ -96,7 +96,7 @@ if (!empty($search_query)) {
                 <strong id="cartTotal">Rs. <?php echo number_format($cartTotal); ?></strong>
             </div>
             <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-                <form action="../cart/checkout_action.php" method="POST">
+                <form action="../checkout/checkout.php" method="POST">
                     <button type="submit" class="checkout-btn">Checkout</button>
                 </form>
             <?php else: ?>

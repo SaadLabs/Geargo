@@ -106,7 +106,7 @@ if ($isLoggedIn) {
             </div>
 
             <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-                <form action="../cart/checkout_action.php" method="POST">
+                <form action="checkout/checkout.php" method="POST">
                     <button type="submit" class="checkout-btn">Checkout</button>
                 </form>
             <?php else: ?>
@@ -196,7 +196,9 @@ if ($isLoggedIn) {
                     Express crystal-clear audio with our latest wireless technology
                 </div>
                 <div class="hero-button">
-                    <button class="slide-button">Explore Collection</button>
+                    <button class="slide-button" onclick="window.location.href='category/category.php?category=1'">
+                        Explore Collection
+                    </button>
                 </div>
             </div>
             <div class="hero-image-container">
@@ -215,7 +217,9 @@ if ($isLoggedIn) {
                     Stay connected with cutting-edge wearable technology
                 </div>
                 <div class="hero-button">
-                    <button class="slide-button">Shop Watches</button>
+                    <button class="slide-button" onclick="window.location.href='category/category.php?category=2'">
+                        Shop Watches
+                    </button>
                 </div>
             </div>
             <div class="hero-image-container">
@@ -225,21 +229,23 @@ if ($isLoggedIn) {
             </div>
         </div>
 
-        <div class="hero-container">
+<div class="hero-container">
             <div class="hero-text-container">
                 <div class="hero-heading">
-                    <h1>Gaming Gear</h1>
+                    <h1>High-Performance Laptops</h1>
                 </div>
                 <div class="hero-text">
-                    Elevate your gaming experience with professional-grade equipment
+                    Unleash your potential with blazing-fast processors and stunning displays designed for both productivity and play.
                 </div>
                 <div class="hero-button">
-                    <button class="slide-button">View Gaming</button>
+                    <button class="slide-button" onclick="window.location.href='category/category.php?category=3'">
+                        Discover More
+                    </button>
                 </div>
             </div>
             <div class="hero-image-container">
                 <div class="hero-image-box">
-                    <img src="assets/images/hero-section/controller.png" alt="">
+                    <img src="assets/images/hero-section/laptop.png" alt="Laptops">
                 </div>
             </div>
         </div>
@@ -247,18 +253,20 @@ if ($isLoggedIn) {
         <div class="hero-container">
             <div class="hero-text-container">
                 <div class="hero-heading">
-                    <h1>Laptops & Tablets</h1>
+                    <h1>Mobiles & Tablets</h1>
                 </div>
                 <div class="hero-text">
-                    Power and portability for work and play
+                    Stay connected anywhere with our latest range of flagship smartphones and versatile tablets.
                 </div>
                 <div class="hero-button">
-                    <button class="slide-button">Discover More</button>
+                    <button class="slide-button" onclick="window.location.href='category/category.php?category=5'">
+                        Shop Mobile
+                    </button>
                 </div>
             </div>
             <div class="hero-image-container">
                 <div class="hero-image-box">
-                    <img src="assets/images/hero-section/laptop.png" alt="">
+                    <img src="assets/images/hero-section/mobile.png" alt="Mobiles and Tablets">
                 </div>
             </div>
         </div>
@@ -270,6 +278,7 @@ if ($isLoggedIn) {
             <span class="dot"></span>
         </div>
     </section>
+
     <section class="hot-products">
         <h2>🔥 Hot Products</h2>
         <div class="hot-products-grid">

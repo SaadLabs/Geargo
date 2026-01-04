@@ -110,7 +110,7 @@ if (!$display) {
             </div>
 
             <?php if ($isLoggedIn && count($cartItems) > 0): ?>
-                <form action="../cart/checkout_action.php" method="POST">
+                <form action="../checkout/checkout.php" method="POST">
                     <button type="submit" class="checkout-btn">Checkout</button>
                 </form>
             <?php else: ?>
@@ -174,7 +174,7 @@ if (!$display) {
         </nav>
 
         <div class="mobile-search-bar">
-            <form action="search/search.php" method="GET" class="search-box" style="position:relative;">
+            <form action="../search/search.php" method="GET" class="search-box" style="position:relative;">
                 <input name="search" id="mobileSearchInput" placeholder="Search" autocomplete="off" />
 
                 <button type="button" id="mobileClearBtn"><span class="material-symbols-outlined">close</span></button>
