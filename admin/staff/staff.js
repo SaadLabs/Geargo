@@ -17,17 +17,23 @@ function showSection(id, element) {
 }
 
 //================================
-
- //Inventory Search
-
+/* Search */
 function searchProduct() {
     let input = document.getElementById("searchInput").value.toLowerCase();
-    let rows = document.querySelectorAll("#productTable tr");
+    
+    // Select the table body rows only
+    let rows = document.querySelectorAll("#productTable tbody tr");
 
-    rows.forEach((row, index) => {
-        if (index === 0) return; // Skip header
-        let name = row.cells[1].innerText.toLowerCase();
-        row.style.display = name.includes(input) ? "" : "none";
+    rows.forEach((row) => {
+        let name = row.cells[1].innerText.toLowerCase(); 
+        
+        let id = row.cells[0].innerText.toLowerCase();
+
+        if (name.includes(input) || id.includes(input)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
     });
 }
 

@@ -6,7 +6,7 @@ $conn = dbConnect();
 
 // Security: Check if user is logged in and is an Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login_admin.php?error=" . urlencode("Unauthorized access"));
+    header("Location: ../../Login/admin/login_admin.php?error=" . urlencode("Unauthorized access"));
     exit();
 }
 
@@ -25,7 +25,7 @@ $prodCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM product");
 $productCount = mysqli_fetch_assoc($prodCountResult)['count'];
 
 // Users Count (Customers only)
-$userCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM user WHERE role = 'customer'");
+$userCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM user  ");
 $userCount = mysqli_fetch_assoc($userCountResult)['count'];
 
 
@@ -42,7 +42,7 @@ $ordersQuery = "SELECT o.*, u.name
 $ordersResult = mysqli_query($conn, $ordersQuery);
 
 // Fetch Users (Customers)
-$usersQuery = "SELECT * FROM user WHERE role = 'customer'";
+$usersQuery = "SELECT * FROM user";
 $usersResult = mysqli_query($conn, $usersQuery);
 
 // Fetch Staff
@@ -85,7 +85,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                 <i class="bi bi-person-badge"></i> Staff
             </li>
 
-            <li class="logout" onclick="window.location.href='logout_admin.php'">
+            <li class="logout" onclick="window.location.href='logout.php'">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </li>
         </ul>
@@ -205,19 +205,32 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <?php while ($order = mysqli_fetch_assoc($ordersResult)): ?>
                             <tr>
                                 <td>#<?php echo $order['order_id']; ?></td>
-                                <td><?php echo htmlspecialchars($order['name'] . ' ' . $order['last_name']); ?></td>
+                                <td><?php echo htmlspecialchars($order['name']); ?></td>
                                 <td>Rs. <?php echo number_format($order['total_amount']); ?></td>
+
+                                <td><?php echo ucfirst($order['order_status']); ?></td>
+
                                 <td>
-                                    <span class="status-badge <?php echo strtolower($order['order_status']); ?>">
-                                        <?php echo ucfirst($order['order_status']); ?>
-                                    </span>
+                                    <form action="admin_update_order.php" method="POST"
+                                        style="display: flex; align-items: center; gap: 5px;">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+
+                                        <select name="status" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                                            <option value="Pending" <?php echo ($order['order_status'] == 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                                            <option value="Processing" <?php echo ($order['order_status'] == 'Processing') ? 'selected' : ''; ?>>Processing</option>
+                                            <option value="Shipped" <?php echo ($order['order_status'] == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
+                                            <option value="Delivered" <?php echo ($order['order_status'] == 'Delivered') ? 'selected' : ''; ?>>Delivered</option>
+                                        </select>
+
+                                        <button type="submit" class="btn-edit"
+                                            style="padding: 5px 10px; cursor: pointer;">Update</button>
+                                    </form>
                                 </td>
-                                <td><?php echo date('M d, Y', strtotime($order['order_date'])); ?></td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5">No orders found.</td>
+                            <td colspan="5">No active orders.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -235,8 +248,9 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <th>User ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Created At</th>
+                        <th>Role</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -246,13 +260,26 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                 <td><?php echo $user['user_id']; ?></td>
                                 <td><?php echo htmlspecialchars($user['name']); ?></td>
                                 <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                <td>Active</td>
-                                <td>
-                                    <form action="block_user_action.php" method="POST">
+                                <td><?php echo htmlspecialchars($user['created_at']); ?></td>
+                                <form action="edit_role.php" method="POST">
+                                    <td>
+                                        <?php
+                                        // Assuming $user['role'] contains the value from your database (e.g., 'staff')
+                                        $roles = ['customer', 'staff', 'admin'];
+                                        ?>
+                                        <select name="role" id="role">
+                                            <?php foreach ($roles as $role): ?>
+                                                <option value="<?php echo $role; ?>" <?php echo ($user['role'] == $role) ? 'selected' : '';?>>
+                                                    <?php echo ucfirst($role); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                    <td>
                                         <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                                        <button type="submit" class="btn-edit" style="background-color: #ff4d4d;">Block</button>
-                                    </form>
-                                </td>
+                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change role</button>
+                                    </td>
+                                </form>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
@@ -268,7 +295,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         <section id="staff" class="content-section hidden">
             <div class="section-header">
                 <h1>Staff</h1>
-                <button class="btn-primary" onclick="openStaffModal()">+ Add Staff</button>
+                <!-- <button class="btn-primary" onclick="openStaffModal()">+ Add Staff</button> -->
             </div>
 
             <table id="staffTable">
@@ -276,8 +303,8 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Role</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -286,16 +313,27 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                         <?php while ($staff = mysqli_fetch_assoc($staffResult)): ?>
                             <tr>
                                 <td><?php echo $staff['user_id']; ?></td>
-                                <td><?php echo htmlspecialchars($staff['name'] . ' ' . $staff['last_name']); ?></td>
-                                <td>Staff</td>
+                                <td><?php echo htmlspecialchars($staff['name']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['email']); ?></td>
-                                <td>
-                                    <form action="delete_staff_action.php" method="POST"
-                                        onsubmit="return confirm('Remove this staff member?');">
+                                <form action="edit_role.php" method="POST">
+                                    <td>
+                                        <?php
+                                        // Assuming $user['role'] contains the value from your database (e.g., 'staff')
+                                        $roles = ['customer', 'staff', 'admin'];
+                                        ?>
+                                        <select name="role" id="role">
+                                            <?php foreach ($roles as $role): ?>
+                                                <option value="<?php echo $role; ?>" <?php echo ($staff['role'] == $role) ? 'selected' : ''; ?>>
+                                                    <?php echo ucfirst($role); // Capitalizes the first letter for display ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                    <td>
                                         <input type="hidden" name="user_id" value="<?php echo $staff['user_id']; ?>">
-                                        <button class="btn-delete">Remove</button>
-                                    </form>
-                                </td>
+                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change role</button>
+                                    </td>
+                                </form>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>

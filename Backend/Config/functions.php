@@ -41,7 +41,7 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
     $offset = ($page - 1) * $limit;
     
     // 1. Build Base SQL
-    $sql = "SELECT * FROM product WHERE is_active = 1";
+    $sql = "SELECT * FROM product WHERE is_active = 1 AND stock_quantity > 0";
     
     // We need variables to track types and values for binding
     $types = "";
@@ -163,7 +163,7 @@ function getSearchSuggestions($conn, $query) {
     $searchTerm = "%" . $query . "%";
     
     // SQL Query: Get ID, Title, Image, Price (Limit 5 results)
-    $sql = "SELECT product_id, title, image, price FROM Product WHERE is_active = 1 AND title LIKE ? LIMIT 5";
+    $sql = "SELECT product_id, title, image, price FROM Product WHERE is_active = 1 AND stock_quantity > 0 AND title LIKE ? LIMIT 5";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -187,7 +187,7 @@ function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
     $term = "%" . $searchTerm . "%";
 
     // Search in Title OR Description
-    $sql = "SELECT * FROM Product WHERE is_active = 1 AND (title LIKE ? OR description LIKE ?)";
+    $sql = "SELECT * FROM Product WHERE is_active = 1 AND stock_quantity > 0 AND (title LIKE ? OR description LIKE ?)";
 
     // Add Sorting
     if ($sort == 'price_low_high') {

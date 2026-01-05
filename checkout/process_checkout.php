@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'];
 
 // 1. Capture Inputs
 $full_name = $_POST['full_name'];
-$address = $_POST['address']; 
+$address = $_POST['address'];
 $payment_method = $_POST['payment_method']; // 'Card' or 'COD'
 $total_amount = $_POST['total_amount'];
 
@@ -22,21 +22,23 @@ $verified_card_id = null;
 
 // 2. PAYMENT VERIFICATION (Card Only)
 if ($payment_method === 'Card') {
-    $input_number = str_replace(' ', '', $_POST['card_number']); 
+    $input_number = str_replace(' ', '', $_POST['card_number']);
     $input_cvv = $_POST['card_cvv'];
-    
+
     // Fetch user's saved cards
     $savedCards = getUserPaymentMethods($conn, $user_id);
     $isVerified = false;
 
     foreach ($savedCards as $card) {
         // Match user input against hashed database values
-        if (password_verify($input_number, $card['card_number']) && 
-            password_verify($input_cvv, $card['cvv'])) {
-            
+        if (
+            password_verify($input_number, $card['card_number']) &&
+            password_verify($input_cvv, $card['cvv'])
+        ) {
+
             $isVerified = true;
             $verified_card_id = $card['card_id']; // CAPTURE THE ID!
-            break; 
+            break;
         }
     }
 
@@ -51,7 +53,7 @@ if ($payment_method === 'Card') {
 // ==============================================================================
 // CHANGE 1: Order Status is now 'Processing' for new orders (not 'paid' or 'shipped')
 // ==============================================================================
-$order_status = 'Processing'; 
+$order_status = 'Processing';
 
 // Insert Order
 $sql = "INSERT INTO `order` (user_id, total_amount, order_status, shipping_address) VALUES (?, ?, ?, ?)";
@@ -63,7 +65,7 @@ if (!$stmt) {
     exit();
 }
 
-$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address,);
+$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address, );
 
 if ($stmt->execute()) {
     $order_id = $stmt->insert_id;
@@ -74,11 +76,11 @@ if ($stmt->execute()) {
     // ==============================================================================
     if ($payment_method === 'Card' && $verified_card_id !== null) {
         $payment_status = 'Completed'; // Since verification passed
-        
+
         // Columns: payment_id (Auto), order_id, card_id, amount, payment_status, paid_at (Default NOW)
         $paySql = "INSERT INTO payment (order_id, card_id, amount, payment_status) VALUES (?, ?, ?, ?)";
         $payStmt = $conn->prepare($paySql);
-        
+
         if ($payStmt) {
             // Types: i (int), i (int), d (decimal), s (string)
             $payStmt->bind_param("iids", $order_id, $verified_card_id, $total_amount, $payment_status);
@@ -88,11 +90,24 @@ if ($stmt->execute()) {
     }
 
     // ==============================================================================
-    // CHANGE 3: Move Items & Clear Cart (Same as before)
+    // CHANGE 3: Move Items & Clear Cart and change qunatities
     // ==============================================================================
-    
-    // Move Cart Items -> Order Items
+
+    //Get all cart itmens
     $cartItems = getCartItems($conn, $user_id);
+
+    //Quantity Update
+    foreach ($cartItems as $item) {
+        $stmt = $conn->prepare("SELECT * FROM `product` WHERE product_id = ?");
+        $stmt->bind_param("i", $item['product_id']);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $prev_quantity = $row["stock_quantity"];
+        $new_quantity = $prev_quantity - $item['quantity'];
+        $conn->query("UPDATE `product` SET `stock_quantity` = {$new_quantity} WHERE `product_id` = {$item['product_id']}");
+    }
+
+    // Move Cart Items -> Order Items
     $itemSql = "INSERT INTO orderitem (order_id, product_id, quantity, price_at_purchase) VALUES (?, ?, ?, ?)";
     $itemStmt = $conn->prepare($itemSql);
 
@@ -109,10 +124,10 @@ if ($stmt->execute()) {
     $stmtCart->bind_param("i", $user_id);
     $stmtCart->execute();
     $cartResult = $stmtCart->get_result();
-    
+
     if ($cartRow = $cartResult->fetch_assoc()) {
         $cart_id = $cartRow['cart_id'];
-        
+
         // 2. Delete items
         $clearItemsSql = "DELETE FROM CartItem WHERE cart_id = ?";
         $stmtItems = $conn->prepare($clearItemsSql);

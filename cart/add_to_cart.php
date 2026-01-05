@@ -65,10 +65,10 @@ try {
         $stmtInsert->execute();
     }
 
-    if (isset($_POST['buy_now']) && $_POST['buy_now'] == 'true') {
-        header("Location: ../checkout/checkout.php");
-        exit();
-    }
+    // if (isset($_POST['buy_now']) && $_POST['buy_now'] == 'true') {
+    //     header("Location: ../checkout/checkout.php");
+    //     exit();
+    // }
 
     // 4. Redirect back
     // This sends the user back to the page they clicked the button from (Home or Product page)
