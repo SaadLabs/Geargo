@@ -127,7 +127,7 @@ if ($isLoggedIn) {
                         <li><a href="#">Home</a></li>
                         <li><a href="category/category.php">Products</a></li>
                         <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="contact/contact.php">Contact</a></li>
                         <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
                         </li>
                     </ul>
@@ -229,13 +229,14 @@ if ($isLoggedIn) {
             </div>
         </div>
 
-<div class="hero-container">
+        <div class="hero-container">
             <div class="hero-text-container">
                 <div class="hero-heading">
                     <h1>High-Performance Laptops</h1>
                 </div>
                 <div class="hero-text">
-                    Unleash your potential with blazing-fast processors and stunning displays designed for both productivity and play.
+                    Unleash your potential with blazing-fast processors and stunning displays designed for both
+                    productivity and play.
                 </div>
                 <div class="hero-button">
                     <button class="slide-button" onclick="window.location.href='category/category.php?category=3'">
@@ -374,6 +375,19 @@ if ($isLoggedIn) {
 
     <script src="home.js"></script>
     <script src="cart/cart.js"></script>
+    <?php
+    if (isset($_GET['msg']) && $_GET['msg'] == 'error in checkout') {
+        // Use json_encode() - it automatically adds quotes and handles special characters safely
+        $error_message = json_encode($_SESSION['error']);
+
+        echo "<script>
+        alert($error_message);
+    </script>";
+
+        // Optional: clear the error after showing it so it doesn't persist
+        unset($_SESSION['error']);
+    }
+    ?>
 
 </body>
 

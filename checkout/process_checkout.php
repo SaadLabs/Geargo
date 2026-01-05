@@ -14,13 +14,59 @@ $user_id = $_SESSION['user_id'];
 // 1. Capture Inputs
 $full_name = $_POST['full_name'];
 $address = $_POST['address'];
-$payment_method = $_POST['payment_method']; // 'Card' or 'COD'
+$payment_method = $_POST['payment_method']; 
 $total_amount = $_POST['total_amount'];
 
 // Variable to store the ID of the card used (if paying by card)
 $verified_card_id = null;
 
-// 2. PAYMENT VERIFICATION (Card Only)
+// ==============================================================================
+// NEW: STOCK CHECK (Must happen before Payment or Order Creation)
+// ==============================================================================
+
+// 1. Get all cart items first
+$cartItems = getCartItems($conn, $user_id);
+
+if (empty($cartItems)) {
+    $_SESSION['error'] = "Your cart is empty.";
+    header("Location: ../index.php");
+    exit();
+}
+
+// 2. Loop through each item to check stock availability
+foreach ($cartItems as $item) {
+    // Fetch current stock for this product
+    $stockStmt = $conn->prepare("SELECT title, stock_quantity FROM product WHERE product_id = ?");
+    $stockStmt->bind_param("i", $item['product_id']);
+    $stockStmt->execute();
+    $stockResult = $stockStmt->get_result();
+    
+    if ($productRow = $stockResult->fetch_assoc()) {
+        $current_stock = $productRow['stock_quantity'];
+        $product_name = $productRow['title'];
+
+        // CHECK: Is the order quantity more than available stock?
+        if ($item['quantity'] > $current_stock) {
+            // ERROR FOUND: Stop everything!
+            if ($current_stock == 0) {
+                $_SESSION['error'] = "Sorry, '$product_name' is currently Out of Stock. Please remove it from your cart.";
+            } else {
+                $_SESSION['error'] = "Sorry, we only have $current_stock unit(s) of '$product_name' left. Please lower the quantity.";
+            }
+            
+            // Redirect user back to Cart page to fix the issue
+            header("Location: ../index.php?msg=error in checkout");
+            exit(); 
+        }
+    }
+    $stockStmt->close();
+}
+// ==============================================================================
+// END STOCK CHECK
+// ==============================================================================
+
+
+// 3. PAYMENT VERIFICATION (Card Only)
 if ($payment_method === 'Card') {
     $input_number = str_replace(' ', '', $_POST['card_number']);
     $input_cvv = $_POST['card_cvv'];
@@ -37,7 +83,7 @@ if ($payment_method === 'Card') {
         ) {
 
             $isVerified = true;
-            $verified_card_id = $card['card_id']; // CAPTURE THE ID!
+            $verified_card_id = $card['card_id']; 
             break;
         }
     }
@@ -49,10 +95,7 @@ if ($payment_method === 'Card') {
     }
 }
 
-// 3. PLACE ORDER
-// ==============================================================================
-// CHANGE 1: Order Status is now 'Processing' for new orders (not 'paid' or 'shipped')
-// ==============================================================================
+// 4. PLACE ORDER
 $order_status = 'Processing';
 
 // Insert Order
@@ -65,46 +108,34 @@ if (!$stmt) {
     exit();
 }
 
-$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address, );
+$stmt->bind_param("idss", $user_id, $total_amount, $order_status, $address);
 
 if ($stmt->execute()) {
     $order_id = $stmt->insert_id;
     $stmt->close();
 
-    // ==============================================================================
-    // CHANGE 2: Record the Payment in 'payment' table (Only for Card)
-    // ==============================================================================
+    // Record Payment
     if ($payment_method === 'Card' && $verified_card_id !== null) {
-        $payment_status = 'Completed'; // Since verification passed
-
-        // Columns: payment_id (Auto), order_id, card_id, amount, payment_status, paid_at (Default NOW)
+        $payment_status = 'Completed'; 
         $paySql = "INSERT INTO payment (order_id, card_id, amount, payment_status) VALUES (?, ?, ?, ?)";
         $payStmt = $conn->prepare($paySql);
 
         if ($payStmt) {
-            // Types: i (int), i (int), d (decimal), s (string)
             $payStmt->bind_param("iids", $order_id, $verified_card_id, $total_amount, $payment_status);
             $payStmt->execute();
             $payStmt->close();
         }
     }
 
-    // ==============================================================================
-    // CHANGE 3: Move Items & Clear Cart and change qunatities
-    // ==============================================================================
-
-    //Get all cart itmens
-    $cartItems = getCartItems($conn, $user_id);
-
-    //Quantity Update
+    // UPDATE QUANTITIES (Reduce Stock)
+    // Since we already fetched $cartItems at the top, we can reuse that variable
     foreach ($cartItems as $item) {
-        $stmt = $conn->prepare("SELECT * FROM `product` WHERE product_id = ?");
-        $stmt->bind_param("i", $item['product_id']);
-        $stmt->execute();
-        $row = $stmt->get_result()->fetch_assoc();
-        $prev_quantity = $row["stock_quantity"];
-        $new_quantity = $prev_quantity - $item['quantity'];
-        $conn->query("UPDATE `product` SET `stock_quantity` = {$new_quantity} WHERE `product_id` = {$item['product_id']}");
+        // We run a direct calculation query for safety
+        $updateStockSql = "UPDATE product SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+        $updateStmt = $conn->prepare($updateStockSql);
+        $updateStmt->bind_param("ii", $item['quantity'], $item['product_id']);
+        $updateStmt->execute();
+        $updateStmt->close();
     }
 
     // Move Cart Items -> Order Items
@@ -117,8 +148,7 @@ if ($stmt->execute()) {
     }
     $itemStmt->close();
 
-    // Empty Cart (Delete Children First logic)
-    // 1. Get Cart ID
+    // Empty Cart
     $getCartIdSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
     $stmtCart = $conn->prepare($getCartIdSql);
     $stmtCart->bind_param("i", $user_id);
@@ -128,7 +158,6 @@ if ($stmt->execute()) {
     if ($cartRow = $cartResult->fetch_assoc()) {
         $cart_id = $cartRow['cart_id'];
 
-        // 2. Delete items
         $clearItemsSql = "DELETE FROM CartItem WHERE cart_id = ?";
         $stmtItems = $conn->prepare($clearItemsSql);
         $stmtItems->bind_param("i", $cart_id);
@@ -136,6 +165,8 @@ if ($stmt->execute()) {
         $stmtItems->close();
     }
     $stmtCart->close();
+    
+    $_SESSION['message'] = "Order placed successfully!"; // Use session message for alert
     header("Location: ../orders/orders.php");
     exit();
 

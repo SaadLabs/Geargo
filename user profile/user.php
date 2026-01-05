@@ -117,7 +117,7 @@ $paymentMethods = getUserPaymentMethods($conn, $user_id);
                         <li><a href="../index.php">Home</a></li>
                         <li><a href="../category/category.php">Products</a></li>
                         <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="../contact/contact.php">Contact</a></li>
                         <li><a href="../orders/orders.php">My Orders</a></li>
                     </ul>
                     <div class="mobile-menu-icons">
@@ -284,7 +284,7 @@ $paymentMethods = getUserPaymentMethods($conn, $user_id);
                     <h3>Add New Card</h3>
                     <form action="add_payment_action.php" method="POST">
                         <label>Name on C1ard</label>
-                        <input type="text" name="card_name" placeholder="John Doe" required>
+                        <input type="text" name="card_name" placeholder="Card Holder Name" required>
 
                         <label>Card Number</label>
                         <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>

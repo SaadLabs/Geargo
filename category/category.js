@@ -123,3 +123,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize Mobile Search
   setupSearch('mobileSearchInput', 'mobileSearchResultsList');
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Check if the URL has "?open_cart=1"
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.has('open_cart')) {
+        // 1. Open the cart immediately
+        openCart(); // Call your existing function that opens the sidebar
+
+        // 2. Clean the URL (remove "?open_cart=1") so it doesn't keep opening on refresh
+        urlParams.delete('open_cart');
+        const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+        window.history.replaceState(null, '', newUrl);
+    }
+});

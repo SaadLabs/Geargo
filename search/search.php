@@ -130,7 +130,7 @@ if (!empty($search_query)) {
                         <li><a href="../index.php">Home</a></li>
                         <li><a href="../category/category.php">Products</a></li>
                         <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="../contact/contact.php">Contact</a></li>
                         <li><a href="../orders/orders.php">My Orders</a></li>
                     </ul>
                     <div class="mobile-menu-icons">

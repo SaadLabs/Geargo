@@ -25,6 +25,8 @@ $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
 // 3. Define Paths
 $loginPagePath = "../Login/user/login_user.php";
 $profilePagePath = "../user profile/user.php";
+
+// Determine where links should go
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
 
 // 4. Fetch Cart Data (If logged in)
@@ -33,33 +35,24 @@ $cartTotal = 0;
 if ($isLoggedIn) {
     $cartItems = getCartItems($conn, $user_id);
 }
-
-// 5. Fetch Product Data
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$display = getProductBy_id($conn, $id);
-
-if (!$display) {
-    echo "Product not found.";
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo htmlspecialchars($display['title']); ?> | GearGo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <link rel="stylesheet" href="product.css">
     <link rel="stylesheet" href="../cart/cart.css">
+    <link rel="stylesheet" href="contact.css">
 </head>
 
 <body>
+    <!-- ================= CART START ================= -->
     <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
 
     <div id="cart-sidebar" class="cart-sidebar">
@@ -74,6 +67,7 @@ if (!$display) {
                     <?php
                     $itemTotal = $item['price'] * $item['quantity'];
                     $cartTotal += $itemTotal;
+                    // Placeholder image logic
                     $imgSrc = !empty($item['image']) ? "../" . $item['image'] : "../headphone1.png";
                     ?>
                     <div class="cart-item">
@@ -82,6 +76,7 @@ if (!$display) {
                         <div class="cart-item-details">
                             <h4><?php echo htmlspecialchars($item['title']); ?></h4>
                             <p>Rs. <?php echo number_format($item['price']); ?></p>
+
                             <form action="../cart/update_quantity.php" method="POST" style="display:inline-block;">
                                 <input type="hidden" name="cart_item_id" value="<?php echo $item['cart_item_id']; ?>">
                                 <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1"
@@ -120,6 +115,10 @@ if (!$display) {
             <?php endif; ?>
         </div>
     </div>
+    <!-- ================= CART END ================= -->
+
+
+    <!-- header section -->
     <header>
         <nav>
             <div class="menu-icon" id="menuIcon">☰</div>
@@ -130,11 +129,11 @@ if (!$display) {
                         <li><a href="../index.php">Home</a></li>
                         <li><a href="../category/category.php">Products</a></li>
                         <li><a href="#">About</a></li>
-                        <li><a href="../contact/contact.php">Contact</a></li>
-                        <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="../orders/orders.php">My Orders</a></li>
                     </ul>
                     <div class="mobile-menu-icons">
-                        <a href="<?php echo $accountLink; ?>" class="mobile-icon-link">
+                        <a href="#" class="mobile-icon-link">
                             <img height="25px" src="../assets/svg/user.svg" alt="User">
                             <span>My Account</span>
                         </a>
@@ -186,116 +185,47 @@ if (!$display) {
         </div>
     </header>
 
-    <section class="products">
-        <div class="container">
-            <div class="product-page">
-                <div class="product-images">
-                    <?php $mainImg = !empty($display['image']) ? '../' . $display['image'] : '../headphone1.png'; ?>
-                    <img src="<?php echo $mainImg; ?>" class="main-image" id="mainImage" alt="Product Image">
-                </div>
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="contact-container">
 
-                <div class="product-info">
-                    <h1 class="product-title"><?php echo htmlspecialchars($display['title']); ?></h1>
-                    <div class="price">Rs. <?php echo number_format($display['price']); ?></div>
+            <!-- Left Info -->
+            <div class="contact-info">
+                <h2>Contact GearGo</h2>
+                <p>Have questions or need support? Reach out to us anytime.</p>
 
-                    <p class="description">
-                        <?php echo nl2br(htmlspecialchars($display['description'])); ?>
-                    </p>
-
-                    <div class="actions" style="display: flex; gap: 10px;">
-
-                        <form action="../cart/add_to_cart.php" method="POST" style="flex: 1;">
-                            <input type="hidden" name="product_id" value="<?php echo $display['product_id']; ?>">
-                            <input type="hidden" name="quantity" value="1">
-
-                            <?php if ($isLoggedIn): ?>
-                                <button type="submit" class="btn btn-cart" style="width: 100%;">Add to Cart</button>
-                            <?php else: ?>
-                                <button type="button" class="btn btn-cart" style="width: 100%;"
-                                    onclick="window.location.href='<?php echo $loginPagePath; ?>'">Add to Cart</button>
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                </div>
+                <ul>
+                    <li><strong>Email:</strong> support@geargo.com</li>
+                    <li><strong>Phone:</strong> +92 300 1234567</li>
+                    <li><strong>Address:</strong> Islamabad, Pakistan</li>
+                </ul>
             </div>
 
-            <div class="related-products-section">
-                <h2>You Might Also Like</h2>
+            <!-- Right Form -->
+            <div class="contact-form">
+                <form action="https://formsubmit.co/s4saad2004@gmail.com" id="contactForm" method="POST">
+                    <input type="text" name="name" id="name" placeholder="Your Name">
+                    <small class="error" id="nameError"></small>
 
-                <div class="related-products-grid">
-                    <?php
-                    $products = Random_products(8, $conn);
-                    foreach ($products as $product) {
-                        $relImg = !empty($product['image']) ? '../' . $product['image'] : '../headphone1.png';
-                        $productLink = "../product page/product.php?id=" . $product['product_id'];
-                        ?>
+                    <input type="email" name="email" id="email" placeholder="Your Email">
+                    <small class="error" id="emailError"></small>
 
-                        <div class="product-card-premium">
-                            <div class="product-image-container-premium">
-                                <a href="<?php echo $productLink; ?>">
-                                    <img src="<?php echo $relImg; ?>" height="200px"
-                                        alt="<?php echo htmlspecialchars($product['title']); ?>"
-                                        class="product-image-premium">
-                                </a>
-                            </div>
+                    <textarea name="message" id="message" rows="5" placeholder="Your Message"></textarea>
+                    <small class="error" id="messageError"></small>
 
-                            <div class="product-info-section">
-                                <a href="<?php echo $productLink; ?>" style="text-decoration:none; color:inherit;">
-                                    <h3 class="product-title-premium"><?php echo htmlspecialchars($product['title']); ?>
-                                    </h3>
-                                    <div class="price-comparison-section">
-                                        <span
-                                            class="current-price-premium"><small>Rs.</small><?php echo number_format($product['price']); ?></span>
-                                        <span
-                                            class="original-price-premium"><small>Rs.</small><?php echo number_format($product['price'] + ($product['price'] * 0.1)); ?></span>
-                                    </div>
-                                </a>
+                    <button type="submit">Send Message</button>
+                </form>
 
-                                <form action="../cart/add_to_cart.php" method="POST">
-                                    <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                                    <input type="hidden" name="quantity" value="1">
-
-                                    <?php if ($isLoggedIn): ?>
-                                        <button type="submit" class="add-to-cart-btn-premium">ADD TO CART</button>
-                                    <?php else: ?>
-                                        <button type="button" class="add-to-cart-btn-premium"
-                                            onclick="window.location.href='<?php echo $loginPagePath; ?>'">ADD TO CART</button>
-                                    <?php endif; ?>
-                                </form>
-                            </div>
-                        </div>
-
-                    <?php } ?>
-                </div>
             </div>
+
         </div>
     </section>
+
+
+
+
 </body>
-
-<script src="product.js"></script>
 <script src="../cart/cart.js"></script>
-<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Check if the URL has "?open_cart=1"
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.has('open_cart')) {
-                // 1. Open the cart immediately
-                // Ensure openCart exists before calling it to prevent errors
-                if (typeof openCart === "function") {
-                    openCart(); 
-                } else {
-                    console.error("openCart function not found. Is cart.js loaded?");
-                }
-
-                // 2. Clean the URL (remove "?open_cart=1") so it doesn't keep opening on refresh
-                urlParams.delete('open_cart');
-                
-                // Reconstruct the URL (keeping other params like ?id=...)
-                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
-                window.history.replaceState(null, '', newUrl);
-            }
-        });
-    </script>
+<script src="contact.js"></script>
 
 </html>

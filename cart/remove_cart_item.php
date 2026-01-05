@@ -34,11 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'])) {
     }
 }
 
-// Redirect back
-if (isset($_SERVER['HTTP_REFERER'])) {
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+// Get the previous page URL
+$url = $_SERVER['HTTP_REFERER'];
+
+// Check if URL already has query parameters (contains '?')
+if (strpos($url, '?') !== false) {
+    // If yes, append with '&'
+    $url .= '&open_cart=1';
 } else {
-    header("Location: ../index.php");
+    // If no, start with '?'
+    $url .= '?open_cart=1';
 }
+
+header("Location: $url");
 exit();
 ?>

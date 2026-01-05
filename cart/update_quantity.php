@@ -57,13 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// 4. Redirect Back
-// Redirect the user back to the page they came from (Home, Products, etc.)
-if (isset($_SERVER['HTTP_REFERER'])) {
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+// Get the previous page URL
+$url = $_SERVER['HTTP_REFERER'];
+
+// Check if URL already has query parameters (contains '?')
+if (strpos($url, '?') !== false) {
+    // If yes, append with '&'
+    $url .= '&open_cart=1';
 } else {
-    // Fallback if referrer is missing
-    header("Location: ../index.php"); 
+    // If no, start with '?'
+    $url .= '?open_cart=1';
 }
+
+header("Location: $url");
 exit();
 ?>
