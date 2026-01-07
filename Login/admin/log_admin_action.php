@@ -31,7 +31,7 @@ if ($stmt) {
             $role = strtolower(trim($record["role"])); // Normalize role string
 
             if ($role === 'admin') {
-                // 1. Handle Admin
+                // Handle Admin
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $record['user_id'];
                 $_SESSION['role'] = 'admin';
@@ -40,7 +40,7 @@ if ($stmt) {
                 exit;
 
             } elseif ($role === 'staff') {
-                // 2. Handle Staff
+                // Handle Staff
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $record['user_id'];
                 $_SESSION['role'] = 'staff';
@@ -49,7 +49,7 @@ if ($stmt) {
                 exit;
 
             } else {
-                // 3. Handle Unauthorized Users (e.g., 'customer')
+                // Handle Unauthorized Users
                 $error = urlencode("Access Denied: You are not authorized to access this panel.");
                 header("Location: login_admin.php?error=$error");
                 exit;

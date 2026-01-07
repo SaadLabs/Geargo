@@ -1,5 +1,4 @@
 <?php
-// checkout/process_checkout.php
 session_start();
 require_once '../Backend/config/functions.php';
 
@@ -11,20 +10,16 @@ if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] != 'POST') {
 $conn = dbConnect();
 $user_id = $_SESSION['user_id'];
 
-// 1. Capture Inputs
+// Capture Inputs
 $full_name = $_POST['full_name'];
 $address = $_POST['address'];
 $payment_method = $_POST['payment_method']; 
 $total_amount = $_POST['total_amount'];
 
-// Variable to store the ID of the card used (if paying by card)
+// Variable to store the ID of the card used
 $verified_card_id = null;
 
-// ==============================================================================
-// NEW: STOCK CHECK (Must happen before Payment or Order Creation)
-// ==============================================================================
-
-// 1. Get all cart items first
+// Get all cart items first
 $cartItems = getCartItems($conn, $user_id);
 
 if (empty($cartItems)) {
@@ -33,7 +28,7 @@ if (empty($cartItems)) {
     exit();
 }
 
-// 2. Loop through each item to check stock availability
+// Loop through each item to check stock availability
 foreach ($cartItems as $item) {
     // Fetch current stock for this product
     $stockStmt = $conn->prepare("SELECT title, stock_quantity FROM product WHERE product_id = ?");
@@ -45,9 +40,8 @@ foreach ($cartItems as $item) {
         $current_stock = $productRow['stock_quantity'];
         $product_name = $productRow['title'];
 
-        // CHECK: Is the order quantity more than available stock?
+        // Is the order quantity more than available stock
         if ($item['quantity'] > $current_stock) {
-            // ERROR FOUND: Stop everything!
             if ($current_stock == 0) {
                 $_SESSION['error'] = "Sorry, '$product_name' is currently Out of Stock. Please remove it from your cart.";
             } else {
@@ -61,12 +55,8 @@ foreach ($cartItems as $item) {
     }
     $stockStmt->close();
 }
-// ==============================================================================
-// END STOCK CHECK
-// ==============================================================================
 
-
-// 3. PAYMENT VERIFICATION (Card Only)
+// Payment Verification
 if ($payment_method === 'Card') {
     $input_number = str_replace(' ', '', $_POST['card_number']);
     $input_cvv = $_POST['card_cvv'];
@@ -89,16 +79,15 @@ if ($payment_method === 'Card') {
     }
 
     if (!$isVerified) {
-        $_SESSION['error'] = "Card verification failed! Details do not match your saved cards.";
+        $_SESSION['error'] = "Card verification failed, Details do not match your saved cards.";
         header("Location: checkout.php");
         exit();
     }
 }
 
-// 4. PLACE ORDER
+// PLACE ORDER
 $order_status = 'Processing';
 
-// Insert Order
 $sql = "INSERT INTO `order` (user_id, total_amount, order_status, shipping_address) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
@@ -127,10 +116,8 @@ if ($stmt->execute()) {
         }
     }
 
-    // UPDATE QUANTITIES (Reduce Stock)
-    // Since we already fetched $cartItems at the top, we can reuse that variable
+    // Update stock quantity after order
     foreach ($cartItems as $item) {
-        // We run a direct calculation query for safety
         $updateStockSql = "UPDATE product SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
         $updateStmt = $conn->prepare($updateStockSql);
         $updateStmt->bind_param("ii", $item['quantity'], $item['product_id']);

@@ -1,12 +1,10 @@
 <?php
-// 1. Start Session and Include Functions
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
 
-// === NEW: AJAX HANDLER ===
-// If 'ajax_query' is in the URL, return JSON data and STOP loading the rest of the page.
+//AJAX
 if (isset($_GET['ajax_query'])) {
     $query = $_GET['ajax_query'];
     $suggestions = getSearchSuggestions($conn, $query);
@@ -14,27 +12,26 @@ if (isset($_GET['ajax_query'])) {
     // Set header to JSON so JS understands it
     header('Content-Type: application/json');
     echo json_encode($suggestions);
-    exit(); // Important: Stop here so we don't load the HTML!
+    exit(); //Stop here so it don't load the HTML
 }
-// =========================
 
-// 2. Check Login Status
+//Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
 
-// 3. Define Paths
+// Define Paths
 $loginPagePath = "../Login/user/login_user.php";
 $profilePagePath = "../user profile/user.php";
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
 
-// 4. Fetch Cart Data (If logged in)
+// Fetch Cart Data (If logged in)
 $cartItems = [];
 $cartTotal = 0;
 if ($isLoggedIn) {
     $cartItems = getCartItems($conn, $user_id);
 }
 
-// 5. Fetch Product Data
+// Fetch Product Data
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $display = getProductBy_id($conn, $id);
 
@@ -280,18 +277,17 @@ if (!$display) {
             const urlParams = new URLSearchParams(window.location.search);
             
             if (urlParams.has('open_cart')) {
-                // 1. Open the cart immediately
-                // Ensure openCart exists before calling it to prevent errors
+                // Open the cart immediately
                 if (typeof openCart === "function") {
                     openCart(); 
                 } else {
                     console.error("openCart function not found. Is cart.js loaded?");
                 }
 
-                // 2. Clean the URL (remove "?open_cart=1") so it doesn't keep opening on refresh
+                // Clean the URL (remove "?open_cart=1") so it doesn't keep opening on refresh
                 urlParams.delete('open_cart');
                 
-                // Reconstruct the URL (keeping other params like ?id=...)
+                // Reconstruct the URL (keeping other params like ?id=...
                 const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
                 window.history.replaceState(null, '', newUrl);
             }

@@ -1,19 +1,15 @@
 <?php
-// Path: cart/update_quantity.php
-
-// 1. Include Session and Database functions
-// (Adjust these paths if your folders are different)
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
-// 2. Security: Check if user is logged in
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     // If not logged in, redirect to login page
     header("Location: ../Login/user/login_user.php");
     exit();
 }
 
-// 3. Handle the Update Request
+//Handle the Update Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Get and Sanitize Inputs
@@ -25,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($cart_item_id > 0 && $quantity > 0) {
         $conn = dbConnect();
 
-        // --- SECURITY CHECK ---
         // Ensure this cart item actually belongs to the logged-in user.
         // We join CartItem with Cart to check the user_id.
         $checkSql = "SELECT ci.cart_item_id 
@@ -44,11 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateStmt = $conn->prepare($updateSql);
             $updateStmt->bind_param("ii", $quantity, $cart_item_id);
             
-            if ($updateStmt->execute()) {
-                // Success
-            } else {
-                // Optional: Handle error logging here
-            }
+            $updateStmt->execute();
             $updateStmt->close();
         } 
         

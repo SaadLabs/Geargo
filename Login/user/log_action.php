@@ -1,6 +1,5 @@
 <?php
 require_once("../../Backend/config/functions.php");
-// Include the session manager to handle the 7-day logic
 require_once("../../Backend/config/session_manager.php");
 
 $conn = dbConnect();
@@ -30,16 +29,14 @@ if ($conn) {
         exit;
     }
 
-    // --- LOGIN SUCCESSFUL ---
-
     // Prevent session fixation attacks
     session_regenerate_id(true);
 
     // Store user data in Session
     $_SESSION['user_id'] = $record['user_id'];
     $_SESSION['email'] = $record['email'];
-    $_SESSION['name'] = $record['name']; // Assuming you have a name column
-    $_SESSION['role'] = $record['role']; // Useful for admin/customer checks
+    $_SESSION['name'] = $record['name'];
+    $_SESSION['role'] = $record['role'];
 
     // Redirect to homepage
     header("Location: ../../index.php");

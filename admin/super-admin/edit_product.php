@@ -10,12 +10,12 @@ if (!isset($_GET['id'])) {
 
 $product_id = $_GET['id'];
 
-// 1. Fetch Product Data
+// Fetch Product Data
 $sql = "SELECT * FROM product WHERE product_id = '$product_id'";
 $result = mysqli_query($conn, $sql);
 $product = mysqli_fetch_assoc($result);
 
-// 2. Fetch Categories (for dropdown)
+// Fetch Categories (for dropdown)
 $catResult = mysqli_query($conn, "SELECT * FROM category");
 ?>
 

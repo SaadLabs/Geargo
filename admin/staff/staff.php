@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../Backend/config/functions.php'; // Adjust path as needed
+require_once '../../Backend/config/functions.php';
 $conn = dbConnect();
 
 // 1. Security Check: Staff Only

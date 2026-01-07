@@ -16,7 +16,6 @@ function showSection(id, element) {
     element.classList.add('active');
 }
 
-//================================
 /* Search */
 function searchProduct() {
     let input = document.getElementById("searchInput").value.toLowerCase();
@@ -37,8 +36,6 @@ function searchProduct() {
     });
 }
 
-//================================
-
 //Order Search
 function searchOrders() {
     let input = document.getElementById('searchOrders').value.toLowerCase();
@@ -57,11 +54,6 @@ function searchOrders() {
 function markShipped(orderId) {
     alert("Order " + orderId + " marked as Shipped. Customer will be notified.");
 }
-
-
-//================================
-
-
 // Update Stock
 
 function updateStock(btn) {
@@ -91,9 +83,6 @@ function updateStock(btn) {
     alert("Stock updated successfully (frontend)");
 }
 
-
-//================================
-
 // Highlight low stock rows
 function checkLowStock() {
     document.querySelectorAll("#productTable tr").forEach((row, index) => {
@@ -109,10 +98,6 @@ function checkLowStock() {
 // Run on load
 checkLowStock();
 
-
-//================================
-
-
 //mark order as shipped
 function markShipped(btn) {
     let row = btn.closest("tr");
@@ -122,7 +107,6 @@ function markShipped(btn) {
 
     alert("Order marked as shipped. Customer notified (simulation).");
 }
-//================================
 
 // Dashboard Stats Update
 function updateDashboardStats() {
@@ -138,7 +122,6 @@ function updateDashboardStats() {
 }
 
 updateDashboardStats();
-//================================
 
 // Open / Close Password Modal
 function openPasswordModal() {

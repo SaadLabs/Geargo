@@ -1,8 +1,8 @@
 <?php
-// Set session cookie lifetime to 7 days (7 * 24 * 60 * 60 = 604800 seconds)
+// Set session cookie lifetime to 7 days
 $lifetime = 604800;
 
-// Set the garbage collection max lifetime to match (ensures server doesn't delete session)
+// Set the garbage collection max lifetime to match (ensures server doesn't delete session
 ini_set('session.gc_maxlifetime', $lifetime);
 
 // Set session cookie parameters
@@ -17,8 +17,7 @@ session_set_cookie_params([
 // Start the session
 session_start();
 
-// ROLLING EXPIRATION CHECK
-// If user is logged in, extend the cookie lifetime by another 7 days from NOW
+// If user is logged in, extend the cookie lifetime by another 7 days from now
 if (isset($_SESSION['user_id'])) {
     setcookie(session_name(), session_id(), time() + $lifetime, '/');
 }

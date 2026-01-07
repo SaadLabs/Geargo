@@ -3,7 +3,7 @@ session_start();
 require_once '../Backend/config/functions.php';
 $conn = dbConnect();
 
-// === AJAX HANDLER ===
+// AJAX
 if (isset($_GET['ajax_query'])) {
     $query = $_GET['ajax_query'];
     $suggestions = getSearchSuggestions($conn, $query);
@@ -12,7 +12,7 @@ if (isset($_GET['ajax_query'])) {
     exit();
 }
 
-// 2. Check Login Status
+// Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 if (!$isLoggedIn) {
     header("Location: ../Login/user/login_user.php");
@@ -21,12 +21,12 @@ if (!$isLoggedIn) {
 
 $user_id = $_SESSION['user_id'];
 
-// 3. Define Paths
+// Define Paths
 $loginPagePath = "../Login/user/login_user.php";
 $profilePagePath = "user.php";
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
 
-// 4. Fetch User Details
+// Fetch User Details
 $sql = "SELECT * FROM user WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
@@ -34,14 +34,14 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// 5. Fetch Orders
+// Fetch Orders
 $orders = getUserOrders($conn, $user_id);
 
-// 6. Fetch Cart
+// Fetch Cart
 $cartItems = getCartItems($conn, $user_id);
 $cartTotal = 0;
 
-// 7. Fetch Payment Methods (From usercard table)
+// Fetch Payment Methods (From usercard table)
 $paymentMethods = getUserPaymentMethods($conn, $user_id);
 ?>
 

@@ -1,12 +1,10 @@
 <?php
-// 1. Start Session and Include Functions
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
 
-// === NEW: AJAX HANDLER ===
-// If 'ajax_query' is in the URL, return JSON data and STOP loading the rest of the page.
+//AJAX
 if (isset($_GET['ajax_query'])) {
     $query = $_GET['ajax_query'];
     $suggestions = getSearchSuggestions($conn, $query);
@@ -14,33 +12,32 @@ if (isset($_GET['ajax_query'])) {
     // Set header to JSON so JS understands it
     header('Content-Type: application/json');
     echo json_encode($suggestions);
-    exit(); // Important: Stop here so we don't load the HTML!
+    exit(); // Stop here so it don't load the HTML
 }
-// =========================
 
-// 2. Check Login Status
+//Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
 
-// 3. Define Paths
+// Define Paths
 $loginPagePath = "../Login/user/login_user.php";
 $profilePagePath = "../user profile/user.php";
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
 
-// 4. Fetch Cart Data
+// Fetch Cart Data
 $cartItems = [];
 $cartTotal = 0;
 if ($isLoggedIn) {
     $cartItems = getCartItems($conn, $user_id);
 }
 
-// 5. CAPTURE SEARCH INPUTS
+// capture search inputs
 $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'default';
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit = 10;
 
-// 6. FETCH SEARCH RESULTS
+// Fetch search results
 if (!empty($search_query)) {
     $data = search_products_by_term($conn, $search_query, $sort_by, $page, $limit);
     $products = $data['products'];

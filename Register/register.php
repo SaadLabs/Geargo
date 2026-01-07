@@ -1,5 +1,4 @@
 <?php
-// Include session manager to check if user is already logged in
 require_once("../Backend/config/session_manager.php");
 
 // If user is already logged in, redirect to home
@@ -32,7 +31,7 @@ if (isset($_GET['error'])) {
 
         <div class="left">
             <div class="logo">
-                <img src="../../assets/logo/logo_white_bgr_rem.png" alt="GearGo Logo">
+                <img src="../assets/logo/logo_white_bgr_rem.png" alt="GearGo Logo">
             </div>
 
             <div class="content">
@@ -86,7 +85,7 @@ if (isset($_GET['error'])) {
 
                 <p class="login-text">
                     Already have an account?
-                    <a href="../user/login_user.php">Login</a>
+                    <a href="../Login/user/login_user.php">Login</a>
                 </p>
 
                 <p class="error" id="errorMsg"></p>

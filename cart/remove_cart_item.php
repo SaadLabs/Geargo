@@ -1,5 +1,4 @@
 <?php
-// Path: cart/remove_cart_item.php
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'])) {
     
     $conn = dbConnect();
 
-    // Security check: Ensure this cart item belongs to the logged-in user's cart
+    //Ensure this cart item belongs to the logged-in user's cart
     $checkSql = "SELECT ci.cart_item_id 
                  FROM CartItem ci
                  JOIN Cart c ON ci.cart_id = c.cart_id

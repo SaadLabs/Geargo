@@ -39,24 +39,19 @@ function Random_products($num, $conn){
 // Function to search/filter products with pagination
 function search_by_category($conn, $category_id = 'all', $sort = 'default', $page = 1, $limit = 5) {
     $offset = ($page - 1) * $limit;
-    
-    // 1. Build Base SQL
+
     $sql = "SELECT * FROM product WHERE is_active = 1 AND stock_quantity > 0";
     
-    // We need variables to track types and values for binding
     $types = "";
     $params = [];
 
-    // 2. Apply Category Filter
-    // Only add the placeholder (?) if we actually have a category
+    // Apply Category Filter
     if ($category_id !== 'all' && $category_id !== null) {
         $sql .= " AND category_id = ?";
         $types .= "i";            // 'i' for integer
         $params[] = $category_id; // Add the value to our list
     }
 
-    // 3. Apply Sorting
-    // (No parameters needed here, just string appending)
     switch ($sort) {
         case 'price_low_high':
             $sql .= " ORDER BY price ASC";
@@ -69,15 +64,14 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
             break;
     }
 
-    // 4. Get Total Count (for pagination)
-    // We modify the query to count rows instead of selecting data
+    // Get Total Count for pagination
+    // modify the query to count rows instead of selecting data
     $countSql = "SELECT COUNT(*) as total " . substr($sql, strpos($sql, "FROM"));
-    // Remove ORDER BY for the count query (it causes errors in some SQL versions and is slow)
     $countSql = preg_replace('/ORDER BY.*$/', '', $countSql);
     
     $stmt = $conn->prepare($countSql);
 
-    // Only bind if we have parameters (e.g. if a category was selected)
+    // Only bind if we have parameters
     if (!empty($params)) {
         $stmt->bind_param($types, ...$params);
     }
@@ -87,9 +81,9 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
     $row = $result->fetch_assoc();
     $totalRecords = $row['total'];
     $totalPages = ceil($totalRecords / $limit);
-    $stmt->close(); // Close this statement to free up the connection
+    $stmt->close(); // Close this statement
 
-    // 5. Apply Pagination Limit to Main Query
+    // Pagination Limit
     $sql .= " LIMIT ? OFFSET ?";
     
     // Add the LIMIT and OFFSET to our binding parameters
@@ -106,7 +100,7 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
     $stmt->execute();
     $result = $stmt->get_result();
     
-    // fetch_all(MYSQLI_ASSOC) returns an associative array (similar to PDO fetchAll)
+    // fetch_all(MYSQLI_ASSOC) returns an associative array
     $products = $result->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 
@@ -128,8 +122,6 @@ function getProductBy_id($conn, $id){
 
 //Cart items for suer
 function getCartItems($conn, $user_id) {
-    // This joins the Cart, CartItem, and Product tables to get the full details
-    // Ensure table names (cart, cartitem, product) match your database exactly (check if singular or plural)
     $sql = "SELECT ci.cart_item_id, ci.quantity, p.title, p.price, p.product_id, p.image 
             FROM cart c
             JOIN cartitem ci ON c.cart_id = ci.cart_id
@@ -138,18 +130,17 @@ function getCartItems($conn, $user_id) {
 
     $stmt = $conn->prepare($sql);
 
-    // 2. Error handling if query fails to prepare (e.g., wrong table names)
     if (!$stmt) {
         die("Error preparing query: " . $conn->error);
     }
 
-    // 3. Bind parameters and execute
+    // Bind parameters and execute
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     
     $result = $stmt->get_result();
     
-    // 4. Return data
+    // Return data
     if ($result->num_rows > 0) {
         return $result->fetch_all(MYSQLI_ASSOC);
     } else {
@@ -236,7 +227,7 @@ function getUserOrders($conn, $user_id) {
     while ($row = $result->fetch_assoc()) {
         $order_id = $row['order_id'];
         
-        // 2. For each order, fetch the Items + Product Details
+        // For each order, fetch the Items + Product Details
         $itemSql = "SELECT oi.quantity, oi.price_at_purchase, p.product_id, p.title, p.image 
                     FROM orderitem oi 
                     JOIN product p ON oi.product_id = p.product_id 

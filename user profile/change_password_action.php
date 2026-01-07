@@ -1,5 +1,4 @@
 <?php
-// user profile/change_password_action.php
 session_start();
 require_once '../Backend/config/functions.php'; // Adjust path if needed
 
@@ -9,18 +8,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// 2. Check if form was submitted
+// Check if form was submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $conn = dbConnect();
     $user_id = $_SESSION['user_id'];
     
-    // 3. Capture Inputs
+    // Capture Inputs
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
     
-    // 4. Basic Validation
+    // Basic Validation
     if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
         $_SESSION['error'] = "All password fields are required.";
         header("Location: user.php");
@@ -33,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // 5. Verify Current Password
+    // Verify Current Password
     // Fetch the stored hash from the database
     $sql = "SELECT password FROM user WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 
     if ($user && password_verify($current_password, $user['password'])) {
-        // 6. Current Password is Correct -> Hash and Update New Password
+        //Current Password is Correct, Hash and Update New Password
         
         $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
         

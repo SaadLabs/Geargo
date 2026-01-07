@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $is_active = 1;
     $user_id = $_SESSION['user_id'];
 
-    // --- Image Upload Logic ---
     $targetDir = "../../assets/products/added/"; // Make sure this folder exists!
     $fileName = rand() . basename($_FILES["product_image"]["name"]);
     $targetFilePath = $targetDir . $fileName;

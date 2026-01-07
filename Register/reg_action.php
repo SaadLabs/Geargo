@@ -1,5 +1,4 @@
 <?php
-// Include session manager to handle login immediately after registration
 require_once("../Backend/config/session_manager.php");
 require_once("../Backend/config/functions.php");
 
@@ -16,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     if ($conn) {
-        // 1. Check if email exists
+        // Check if email exists
         $sql = "SELECT user_id FROM user WHERE email=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
@@ -30,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $stmt->close();
 
-        // 2. Register User
+        // Register User
         $insertUserSql = "INSERT INTO `user` (`name`, `email`, `password`, `phone`, `role`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
         
         if ($stmt = $conn->prepare($insertUserSql)) {
@@ -40,14 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Get the ID of the new user
                 $new_user_id = $conn->insert_id;
                 
-                // 3. Create a Cart for this new user
+                // Create a Cart for this new user
                 $createCartSql = "INSERT INTO Cart (user_id, created_at) VALUES (?, NOW())";
                 $cartStmt = $conn->prepare($createCartSql);
                 $cartStmt->bind_param("i", $new_user_id);
                 $cartStmt->execute();
                 $cartStmt->close();
 
-                // 4. Auto-Login the user (Set Session)
+                // Auto-Login the user (Set Session)
                 $_SESSION['user_id'] = $new_user_id;
                 $_SESSION['email'] = $email;
                 $_SESSION['name'] = $name;

@@ -1,5 +1,4 @@
 <?php
-// Path: cart/add_to_cart.php
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
@@ -20,7 +19,6 @@ if ($product_id <= 0) {
 $conn = dbConnect();
 
 try {
-    // 2. Check/Create Cart
     // Check if user has a cart
     $cartSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
     $stmt = $conn->prepare($cartSql);
@@ -40,7 +38,7 @@ try {
         $cart_id = $stmtCreate->insert_id;
     }
 
-    // 3. Add Item to Cart
+    // Add Item to Cart
     // Check if this product is already in the cart
     $itemSql = "SELECT cart_item_id, quantity FROM CartItem WHERE cart_id = ? AND product_id = ?";
     $stmtItem = $conn->prepare($itemSql);
@@ -65,12 +63,6 @@ try {
         $stmtInsert->execute();
     }
 
-    // if (isset($_POST['buy_now']) && $_POST['buy_now'] == 'true') {
-    //     header("Location: ../checkout/checkout.php");
-    //     exit();
-    // }
-
-    // 4. Redirect back
     // This sends the user back to the page they clicked the button from (Home or Product page)
     if (isset($_SERVER['HTTP_REFERER'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);

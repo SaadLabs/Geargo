@@ -1,5 +1,4 @@
 <?php
-// Include session manager to check if user is already logged in
 require_once("../../Backend/config/session_manager.php");
 
 // If user is already logged in, redirect to home

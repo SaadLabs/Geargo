@@ -1,9 +1,8 @@
 <?php
-// user profile/delete_payment_action.php
 session_start();
 require_once '../Backend/config/functions.php';
 
-// 1. Check Login
+// Check Login
 if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] != 'POST') {
     header("Location: user.php");
     exit();
@@ -13,8 +12,7 @@ $conn = dbConnect();
 $user_id = $_SESSION['user_id'];
 $card_id = $_POST['card_id'];
 
-// 2. Delete the card ONLY if it belongs to the logged-in user
-// This AND user_id = ? check is crucial for security!
+// Delete the card only if it belongs to the logged-in user
 $sql = "UPDATE usercard SET is_active = 0 WHERE card_id = ?";
 
 $stmt = $conn->prepare($sql);

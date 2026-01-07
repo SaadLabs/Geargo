@@ -1,5 +1,5 @@
 <?php
-// 1. Session & Security
+//Session & Security
 session_start();
 require_once '../../Backend/config/functions.php'; // Adjust path if needed
 $conn = dbConnect();
@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// 2. Dashboard Logic (Fetch Counts)
+//Dashboard Logic (Fetch Counts)
 // Orders Count
 $orderCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM `order`");
 $orderCount = mysqli_fetch_assoc($orderCountResult)['count'];
@@ -29,7 +29,7 @@ $userCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM user  ");
 $userCount = mysqli_fetch_assoc($userCountResult)['count'];
 
 
-// 3. Fetch Data for Tables
+//Fetch Data for Tables
 // Fetch Products
 $productsQuery = "SELECT * FROM product ORDER BY product_id ASC";
 $productsResult = mysqli_query($conn, $productsQuery);
@@ -295,7 +295,6 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
         <section id="staff" class="content-section hidden">
             <div class="section-header">
                 <h1>Staff</h1>
-                <!-- <button class="btn-primary" onclick="openStaffModal()">+ Add Staff</button> -->
             </div>
 
             <table id="staffTable">

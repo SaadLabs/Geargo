@@ -1,11 +1,10 @@
 <?php
-// 1. Start Session and Include Functions
 require_once '../Backend/config/session_manager.php';
 require_once '../Backend/config/functions.php';
 
 $conn = dbConnect();
 
-// === AJAX HANDLER ===
+//AJAX
 if (isset($_GET['ajax_query'])) {
     $query = $_GET['ajax_query'];
     $suggestions = getSearchSuggestions($conn, $query);
@@ -14,7 +13,7 @@ if (isset($_GET['ajax_query'])) {
     exit();
 }
 
-// 2. Check Login Status
+// Check Login Status
 $isLoggedIn = isset($_SESSION['user_id']);
 if (!$isLoggedIn) {
     header("Location: ../Login/user/login_user.php");
@@ -22,12 +21,12 @@ if (!$isLoggedIn) {
 }
 $user_id = $_SESSION['user_id'];
 
-// 3. Define Paths
+// Define Paths
 $loginPagePath = "../Login/user/login_user.php";
 $profilePagePath = "../user profile/user.php";
 $accountLink = $isLoggedIn ? $profilePagePath : $loginPagePath;
 
-// 4. Fetch Cart & User Data
+// Fetch Cart & User Data
 $cartItems = getCartItems($conn, $user_id);
 $userData = ['name' => '', 'email' => '', 'phone' => ''];
 
@@ -42,7 +41,7 @@ if ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
-// 5. FETCH SAVED CARDS (To check if user has any)
+// FETCH SAVED CARDS (To check if user has any)
 $savedCards = getUserPaymentMethods($conn, $user_id);
 $hasCards = count($savedCards) > 0;
 ?>
