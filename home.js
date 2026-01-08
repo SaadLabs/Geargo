@@ -39,7 +39,7 @@ setupSearchLogic("mobileSearchInput", "mobileClearBtn");
 
 // Listen for screen resize to reset mobile state on desktop
 const mobileSearchBarvis = document.querySelector('.mobile-search-bar');
-const breakpoint = 1100; // Use the same breakpoint as your CSS media query
+const breakpoint = 1100;
 
 window.addEventListener('resize', () => {
   if (window.innerWidth > breakpoint) {
@@ -63,11 +63,7 @@ mobileSearchIcon.addEventListener('click', () => {
 
 //---------------------------------------------------------------------------------------------------------
 
-
-
 //                                        === Slideshow ===
-
-
 
 const slides = document.querySelectorAll(".hero-container");
 const dots = document.querySelectorAll(".dot");
@@ -108,22 +104,6 @@ function resetInterval() {
   clearInterval(slideInterval);
   slideInterval = setInterval(showNextSlide, 4000);
 }
-
-// === Buttons ===
-// const prevBtn = document.querySelector(".prev");
-// const nextBtn = document.querySelector(".next");
-
-// if (prevBtn && nextBtn) {
-//   prevBtn.addEventListener("click", () => {
-//     showPrevSlide();
-//     resetInterval();
-//   });
-
-//   nextBtn.addEventListener("click", () => {
-//     showNextSlide();
-//     resetInterval();
-//   });
-// }
 
 // === Dots Click Handling ===
 dots.forEach((dot, index) => {

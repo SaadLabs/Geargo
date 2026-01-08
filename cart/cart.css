@@ -1,13 +1,4 @@
-/* :root {
-  --geargo-blue: #1f6bff;        /* Primary */
-  /* --geargo-blue-dark: #174fd6;   /* Hover */
-  /* --geargo-light-bg: #f7f9fc;    Background */
-  /* --geargo-border: #e5e7eb;      Borders */
-  /* --geargo-text: #111827;        Main text  */
-  /* --geargo-muted: #6b7280;       Secondary text */
-/* } */ 
 
-/* Overlay */
 .cart-overlay {
     position: fixed;
     top: 0;
@@ -20,7 +11,6 @@
     z-index: 999;
 }
 
-/* Cart Sidebar */
 .cart-sidebar {
     position: fixed;
     top: 0;
@@ -35,7 +25,6 @@
     flex-direction: column;
 }
 
-/* Active */
 .cart-sidebar.active {
     right: 0;
 }
@@ -44,7 +33,6 @@
     display: block;
 }
 
-/* Header */
 .cart-header {
     background: #f7f9fc;
     ;
@@ -177,7 +165,6 @@
 
 @media (max-width: 768px) {
 
-  /* Full-width cart on mobile */
   .cart-sidebar {
     width: 100%;
     right: -100%;
@@ -187,7 +174,6 @@
     right: 0;
   }
 
-  /* Bigger header */
   .cart-header {
     padding: 18px;
   }
@@ -201,7 +187,6 @@
     padding: 6px;
   }
 
-  /* Cart items spacing */
   .cart-item {
     padding: 14px;
     gap: 12px;
@@ -215,14 +200,12 @@
     font-size: 15px;
   }
 
-  /* Bigger quantity input */
   .cart-item-details input {
     width: 70px;
     height: 34px;
     font-size: 15px;
   }
 
-  /* Sticky footer */
   .cart-footer {
     position: sticky;
     bottom: 0;

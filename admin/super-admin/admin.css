@@ -94,7 +94,6 @@ h1 {
     color: #0d6efd;
 }
 
-/* Section Header */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -102,7 +101,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Search */
 #searchInput {
     margin: 15px 0;
     padding: 10px;
@@ -133,7 +131,6 @@ table td {
     border-bottom: 1px solid #eee;
 }
 
-/* Buttons */
 button {
     border: none;
     padding: 7px 12px;
@@ -163,7 +160,6 @@ button {
     color: white;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -199,14 +195,11 @@ button {
     border: 1px solid #ccc;
 }
 
-
-/* Modal buttons */
 .modal-actions {
     display: flex;
     justify-content: space-between;
 }
 
-/* Hidden */
 .hidden {
     display: none;
 }
@@ -215,21 +208,16 @@ button {
     margin-bottom: 5px;
 }
 
-/* Visual style for soft-deleted products */
 .inactive-row {
     background-color: #f8d7da !important;
-    /* Light Red background */
     color: #721c24;
-    /* Dark red text */
     opacity: 0.8;
 }
 
-/* Optional: Strike-through text to make it obvious */
 .inactive-row td {
     text-decoration: line-through;
 }
 
-/* But don't strike-through the buttons! */
 .inactive-row td:last-child {
     text-decoration: none;
 }

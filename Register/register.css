@@ -14,7 +14,6 @@ body {
     height: 100vh;
 }
 
-/* LEFT */
 .left {
     flex: 1;
     color: white;
@@ -23,15 +22,11 @@ body {
     display: flex;
     align-items: center;
     padding: 60px;
-
     background-image: url('../assets/images/home-section/banner/geargo-banner-pc.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
-
 }
-
 
 .left .content {
     animation: slideFade 1.2s ease forwards;
@@ -99,8 +94,6 @@ body {
     }
 }
 
-
-
 .left .logo {
     position: absolute;
     top: 20px;
@@ -112,7 +105,6 @@ body {
     height: auto;
 }
 
-/* Optional animation */
 .left .logo {
     animation: logoFade 1s ease forwards;
 }
@@ -129,7 +121,6 @@ body {
     }
 }
 
-/* RIGHT */
 .right {
     flex: 1;
     background: #ffffff;
@@ -216,7 +207,7 @@ button:hover {
     text-align: center;
 }
 
-/* MOBILE */
+/* responsive */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
