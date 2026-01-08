@@ -125,8 +125,8 @@ if ($isLoggedIn) {
                 <div class="nav-links-container" id="navContainer">
                     <ul class="nav-links">
                         <li><a href="../index.php">Home</a></li>
-                        <li><a href="category.php">Products</a></li>
-                        <li><a href="aboout/about.html">About</a></li>
+                        <li><a href="#" class="active">Products</a></li>
+                        <li><a href="../about/about.html">About</a></li>
                         <li><a href="../contact/contact.php">Contact</a></li>
                         <li><a href="<?php echo $isLoggedIn ? '../orders/orders.php' : $loginPagePath; ?>">My Orders</a>
                     </ul>

@@ -61,6 +61,10 @@ nav {
     gap: 50px;
 }
 
+.nav-links li a.active {
+    color: #3b71dc;
+}
+
 .nav-links a {
     text-decoration: none;
     color: rgb(64, 64, 64);
@@ -412,4 +416,105 @@ button {
 .dev-card p {
     color: #555;
     font-size: 14px;
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .about-content {
+        padding: 50px 8%;
+    }
+
+    .mission {
+        padding: 50px 10%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* About section stack */
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 6%;
+    }
+
+    .about-text h2 {
+        font-size: 22px;
+    }
+
+    .about-text p {
+        font-size: 15px;
+    }
+
+    .about-image img {
+        max-width: 90%;
+        margin: auto;
+    }
+
+    /* Developers */
+    .dev-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dev-card {
+        width: 90%;
+        max-width: 320px;
+    }
+
+    .dev-card img {
+        width: 110px;
+        height: 110px;
+    }
+
+    /* Hero text */
+    .about-hero h1 {
+        font-size: 28px;
+    }
+
+    .about-hero p {
+        font-size: 16px;
+    }
+
+    /* Mission */
+    .mission {
+        padding: 40px 8%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .about-hero {
+        padding: 60px 15px;
+    }
+
+    .about-hero h1 {
+        font-size: 24px;
+    }
+
+    .about-hero p {
+        font-size: 14px;
+    }
+
+    .about-text h2,
+    .developers h2,
+    .mission h2 {
+        font-size: 20px;
+    }
+
+    .about-text p,
+    .mission p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .dev-card {
+        padding: 20px;
+    }
+
+    .dev-card img {
+        width: 100px;
+        height: 100px;
+    }
 }

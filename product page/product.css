@@ -60,6 +60,10 @@
       gap: 50px;
     }
 
+    .nav-links li a.active {
+      color: #3b71dc;
+    }
+
     .nav-links a {
       text-decoration: none;
       color: rgb(64, 64, 64);

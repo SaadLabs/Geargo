@@ -275,6 +275,10 @@
               align-items: center;
           }
 
+          .nav-links li a.active {
+              color: #3b71dc;
+          }
+
           .mobile-icon-link {
               display: flex;
               align-items: center;

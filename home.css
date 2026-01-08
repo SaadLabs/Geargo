@@ -59,7 +59,9 @@
       list-style: none;
       gap: 50px;
     }
-
+    .nav-links li a.active{
+      color: #3b71dc;
+    }
     .nav-links a {
       text-decoration: none;
       color: rgb(64, 64, 64);
@@ -67,6 +69,7 @@
       transition: color 0.3s ease;
       position: relative;
     }
+
 
     .nav-links li a::after {
       content: '';
@@ -88,6 +91,7 @@
     .nav-links a:hover {
       color: #3b71dc;
     }
+
 
     .shop-button {
       background-color: #3b71dc;

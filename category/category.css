@@ -69,6 +69,10 @@ nav {
     position: relative;
 }
 
+.nav-links li a.active {
+    color: #3b71dc;
+}
+
 .nav-links li a::after {
     content: '';
     position: absolute;
@@ -492,22 +496,46 @@ button {
 /* Pagination */
 .pagination {
     margin-top: 40px;
-    text-align: center;
     margin-bottom: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .pagination a {
-    margin: 0 5px;
-    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
     text-decoration: none;
     border: 1px solid #E0E7FF;
     color: #0D6EFD;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .pagination a.active {
     background: #0D6EFD;
     color: white;
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 6px;
+    }
+
+    .pagination a {
+        min-width: 34px;
+        height: 34px;
+        font-size: 13px;
+        padding: 0 10px;
+    }
 }
 
 
