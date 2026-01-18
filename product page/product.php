@@ -126,9 +126,9 @@ if (!$display) {
                     <ul class="nav-links">
                         <li><a href="../index.php">Home</a></li>
                         <li><a href="../category/category.php" class="active">Products</a></li>
-                        <li><a href="../about/about.html">About</a></li>
+                        <li><a href="<?php echo $isLoggedIn ? '../orders/orders.php' : $loginPagePath; ?>">My Orders</a></li>
                         <li><a href="../contact/contact.php">Contact</a></li>
-                        <li><a href="<?php echo $isLoggedIn ? 'orders/orders.php' : $loginPagePath; ?>">My Orders</a>
+                        <li><a href="../about/about.php">About</a></li>
                     </ul>
                     <div class="mobile-menu-icons">
                         <a href="<?php echo $accountLink; ?>" class="mobile-icon-link">

@@ -20,12 +20,36 @@ const dashboardData = {
 
 function updateDashboard() {
     const filter = document.getElementById("dashboardFilter").value;
+    
+    // Select elements
+    const orderEl = document.getElementById("orderCount");
+    const salesEl = document.getElementById("salesAmount");
+    const productEl = document.getElementById("productCount");
+    const userEl = document.getElementById("userCount");
 
-    document.getElementById("orderCount").innerText =
-        dashboardData[filter].orders;
+    //Show loading state (visual feedback)
+    orderEl.innerText = "...";
+    salesEl.innerText = "...";
 
-    document.getElementById("salesAmount").innerText =
-        "Rs. " + dashboardData[filter].sales.toLocaleString();
+    //Fetch Data from API
+    fetch(`admin_dashboard_data.php?filter=${filter}`)
+        .then(response => response.json())
+        .then(data => {
+            //Update HTML with new numbers
+            orderEl.innerText = data.orders;
+            
+            // Format Sales as Currency (e.g., Rs. 12,000)
+            salesEl.innerText = "Rs. " + parseInt(data.sales).toLocaleString();
+            
+            //Update products/users
+            productEl.innerText = data.products;
+            userEl.innerText = data.users;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            orderEl.innerText = "Error";
+            salesEl.innerText = "Error";
+        });
 }
 
 // Load default

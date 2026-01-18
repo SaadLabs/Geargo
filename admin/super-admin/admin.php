@@ -98,6 +98,10 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                 <h1>Dashboard</h1>
                 <select id="dashboardFilter" onchange="updateDashboard()">
                     <option value="all">All Time</option>
+                    <option value="today">Last 24Hrs</option>
+                    <option value="week">Last 7 Days</option>
+                    <option value="month">Last 30 Days</option>
+                    <option value="year">Last Year</option>
                 </select>
             </div>
 
@@ -264,20 +268,18 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                 <form action="edit_role.php" method="POST">
                                     <td>
                                         <?php
-                                        // Assuming $user['role'] contains the value from your database (e.g., 'staff')
                                         $roles = ['customer', 'staff', 'admin'];
                                         ?>
                                         <select name="role" id="role">
                                             <?php foreach ($roles as $role): ?>
-                                                <option value="<?php echo $role; ?>" <?php echo ($user['role'] == $role) ? 'selected' : '';?>>
-                                                    <?php echo ucfirst($role); ?>
-                                                </option>
+                                                <option value="<?php echo $role; ?>" <?php echo ($user['role'] == $role) ? 'selected' : ''; ?>> <?php echo ucfirst($role); ?> </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </td>
                                     <td>
                                         <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change role</button>
+                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change
+                                            role</button>
                                     </td>
                                 </form>
                             </tr>
@@ -317,7 +319,6 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                 <form action="edit_role.php" method="POST">
                                     <td>
                                         <?php
-                                        // Assuming $user['role'] contains the value from your database (e.g., 'staff')
                                         $roles = ['customer', 'staff', 'admin'];
                                         ?>
                                         <select name="role" id="role">
@@ -330,7 +331,8 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                     </td>
                                     <td>
                                         <input type="hidden" name="user_id" value="<?php echo $staff['user_id']; ?>">
-                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change role</button>
+                                        <button type="submit" class="btn-edit" style="background-color: #4d77ffff;">change
+                                            role</button>
                                     </td>
                                 </form>
                             </tr>

@@ -714,7 +714,7 @@
 
 .add-to-cart-btn-premium {
     width: 100%;
-    /* padding: 7px 10px; */
+    padding: 7px 10px;
     border: 1px solid #333;
     border-radius: 4px;
     background-color: transparent;
