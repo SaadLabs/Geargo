@@ -210,6 +210,10 @@ if ($isLoggedIn) {
                 <span class="label">Ship To</span>
                 <span class="value user-name">Me <i class="bi bi-chevron-down"></i></span>
               </div>
+              <div class="meta-column">
+                <span class="label">Status</span>
+                <span class="user-name"><?php echo htmlspecialchars($order['order_status']); ?></span>
+              </div>
               <div class="order-number">
                 <span class="label">Order # <?php echo $order['order_id']; ?></span>
               </div>

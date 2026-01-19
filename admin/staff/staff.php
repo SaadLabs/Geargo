@@ -167,6 +167,7 @@ $profile = mysqli_fetch_assoc(mysqli_query($conn, $profileSql));
                                             <option value="Processing" <?php echo ($order['order_status'] == 'Processing') ? 'selected' : ''; ?>>Processing</option>
                                             <option value="Shipped" <?php echo ($order['order_status'] == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
                                             <option value="Delivered" <?php echo ($order['order_status'] == 'Delivered') ? 'selected' : ''; ?>>Delivered</option>
+                                            <option value="Cancelled"  <?php echo ($order['order_status'] == 'Cancelled') ? 'selected' : ''; ?>>Cancelled</option>
                                         </select>
 
                                         <button type="submit" class="btn-edit"

@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
 //Dashboard Logic (Fetch Counts)
 // Orders Count
-$orderCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM `order`");
+$orderCountResult = mysqli_query($conn, "SELECT COUNT(*) as count FROM `order` where order_status != 'Cancelled'");
 $orderCount = mysqli_fetch_assoc($orderCountResult)['count'];
 
 // Sales Total
@@ -224,6 +224,7 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
                                             <option value="Processing" <?php echo ($order['order_status'] == 'Processing') ? 'selected' : ''; ?>>Processing</option>
                                             <option value="Shipped" <?php echo ($order['order_status'] == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
                                             <option value="Delivered" <?php echo ($order['order_status'] == 'Delivered') ? 'selected' : ''; ?>>Delivered</option>
+                                            <option value="Cancelled"  <?php echo ($order['order_status'] == 'Cancelled') ? 'selected' : ''; ?>>Cancelled</option>
                                         </select>
 
                                         <button type="submit" class="btn-edit"
@@ -405,6 +406,33 @@ $categoryResult = mysqli_query($conn, $categoryQuery);
     </div>
 
     <script src="admin.js"></script>
+    <?php if (isset($_GET['msg'])): ?>
+        <script>
+            // Display Success Message
+            alert("<?php echo htmlspecialchars($_GET['msg']); ?>");
+
+            // Clean the URL (remove ?msg=...) so it doesn't show again on refresh
+            if (window.history.replaceState) {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('msg');
+                window.history.replaceState(null, '', url.toString());
+            }
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['error'])): ?>
+        <script>
+            // Display Error Message
+            alert("Error: <?php echo htmlspecialchars($_GET['error']); ?>");
+
+            // Clean the URL (remove ?error=...)
+            if (window.history.replaceState) {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('error');
+                window.history.replaceState(null, '', url.toString());
+            }
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>

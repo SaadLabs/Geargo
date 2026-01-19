@@ -29,12 +29,12 @@ switch ($filter) {
 }
 
 // Orders Count (Filtered by time)
-$orderSql = "SELECT COUNT(*) as count FROM `order` WHERE 1=1 $dateCondition";
+$orderSql = "SELECT COUNT(*) as count FROM `order` WHERE 1=1 $dateCondition AND order_status != 'Cancelled'";
 $orderResult = mysqli_query($conn, $orderSql);
 $orders = mysqli_fetch_assoc($orderResult)['count'];
 
 //Sales Total
-$salesSql = "SELECT COALESCE(SUM(total_amount), 0) as total FROM `order` WHERE 1=1 $dateCondition";
+$salesSql = "SELECT COALESCE(SUM(total_amount), 0) as total FROM `order` WHERE 1=1 $dateCondition AND order_status != 'Cancelled'";
 $salesResult = mysqli_query($conn, $salesSql);
 $sales = mysqli_fetch_assoc($salesResult)['total'];
 

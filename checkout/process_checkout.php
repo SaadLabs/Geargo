@@ -86,7 +86,7 @@ if ($payment_method === 'Card') {
 }
 
 // PLACE ORDER
-$order_status = 'Processing';
+$order_status = 'Pending';
 
 $sql = "INSERT INTO `order` (user_id, total_amount, order_status, shipping_address) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
