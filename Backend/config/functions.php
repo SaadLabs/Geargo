@@ -12,7 +12,7 @@ function dbConnect(){
 // Function to fetch all categories for the dropdown
 function getCategories($conn) {
     // Note: Check if your table is named 'Category' or 'Categories' in your DB
-    $sql = "SELECT * FROM Category ORDER BY name ASC"; 
+    $sql = "SELECT * FROM category ORDER BY name ASC"; 
     $result = $conn->query($sql);
     
     // fetch_all returns an array of all rows
