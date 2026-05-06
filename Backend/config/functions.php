@@ -1,7 +1,7 @@
 <?php
 //Database connection
 function dbConnect(){
-    if ($conn = mysqli_connect("geargo1-db", "root", "", "geargo")){
+    if ($conn = mysqli_connect("geargo1-db", "root", "root", "geargo")){
         return $conn;
     }
     else{
