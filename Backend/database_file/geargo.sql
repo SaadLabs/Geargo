@@ -307,9 +307,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `role`, `profile_pic`, `created_at`) VALUES
-(1, 'Khizar Nadeem', 'khizarnadeem324@gmail.com', '$2y$10$9ofFDJ1SPmH/b6UgSpNh/.EH3LCsGgMr7sVlYz79HI.iFIZqyyKea', '03320777167', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
-(3, 'Muhammad Saad', 'saad@gmail.com', '$2y$10$Phsa1SJvJuST5L.RbB3p/e8i756wIeJK09/dd.C.hvT69m59aw1nW', '03320777167', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
-(4, 'Umer Ijaz', 'umer@gmail.com', '$2y$10$sQc2AriORaqLYRQQLEdNM.ZmeqmTt0eqNVAj4IYBWK.rb2QtngZ5W', '03245175656', 'customer', '', '2026-01-04 13:25:22');
+(1, 'Khizar', 'khizar@gmail.com', '$2y$10$9ofFDJ1SPmH/b6UgSpNh/.EH3LCsGgMr7sVlYz79HI.iFIZqyyKea', '03320777167', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
+(3, 'Saad', 'saad@gmail.com', '$2y$10$Phsa1SJvJuST5L.RbB3p/e8i756wIeJK09/dd.C.hvT69m59aw1nW', '03320777167', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
+(4, 'Umer', 'umer@gmail.com', '$2y$10$sQc2AriORaqLYRQQLEdNM.ZmeqmTt0eqNVAj4IYBWK.rb2QtngZ5W', '03245175656', 'customer', '', '2026-01-04 13:25:22');
 
 -- --------------------------------------------------------
 

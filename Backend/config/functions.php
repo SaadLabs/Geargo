@@ -1,26 +1,37 @@
 <?php
 //Database connection
-function dbConnect(){
-    if ($conn = mysqli_connect("geargo1-db", "root", "root", "geargo")){
-        return $conn;
-    }
-    else{
+function dbConnect()
+{
+    // Fetch variables securely from Docker's environment
+    $host = getenv('DB_HOST');     
+    $user = getenv('DB_USER');     
+    $pass = getenv('DB_PASSWORD'); 
+    $db = getenv('DB_NAME');     
+
+    // Make the connection
+    $conn = new mysqli($host, $user, $pass, $db);
+
+    // Check connection
+    if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
+    return $conn;
 }
 
 // Function to fetch all categories for the dropdown
-function getCategories($conn) {
+function getCategories($conn)
+{
     // Note: Check if your table is named 'Category' or 'Categories' in your DB
-    $sql = "SELECT * FROM category ORDER BY name ASC"; 
+    $sql = "SELECT * FROM category ORDER BY name ASC";
     $result = $conn->query($sql);
-    
+
     // fetch_all returns an array of all rows
-    return $result->fetch_all(MYSQLI_ASSOC); 
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 //Hot products
-function Random_products($num, $conn){
+function Random_products($num, $conn)
+{
     // $query = "SELECT * FROM `product` order by rand() limit $num";
     $query = "SELECT * FROM `product` WHERE `is_active` = 1 ORDER BY rand() limit $num";
     $result = mysqli_query($conn, $query);
@@ -37,11 +48,12 @@ function Random_products($num, $conn){
 }
 
 // Function to search/filter products with pagination
-function search_by_category($conn, $category_id = 'all', $sort = 'default', $page = 1, $limit = 5) {
+function search_by_category($conn, $category_id = 'all', $sort = 'default', $page = 1, $limit = 5)
+{
     $offset = ($page - 1) * $limit;
 
     $sql = "SELECT * FROM product WHERE is_active = 1 AND stock_quantity > 0";
-    
+
     $types = "";
     $params = [];
 
@@ -60,7 +72,7 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
             $sql .= " ORDER BY price DESC";
             break;
         default:
-            $sql .= " ORDER BY stock_quantity DESC"; 
+            $sql .= " ORDER BY stock_quantity DESC";
             break;
     }
 
@@ -68,14 +80,14 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
     // modify the query to count rows instead of selecting data
     $countSql = "SELECT COUNT(*) as total " . substr($sql, strpos($sql, "FROM"));
     $countSql = preg_replace('/ORDER BY.*$/', '', $countSql);
-    
+
     $stmt = $conn->prepare($countSql);
 
     // Only bind if we have parameters
     if (!empty($params)) {
         $stmt->bind_param($types, ...$params);
     }
-    
+
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
@@ -85,7 +97,7 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
 
     // Pagination Limit
     $sql .= " LIMIT ? OFFSET ?";
-    
+
     // Add the LIMIT and OFFSET to our binding parameters
     $types .= "ii";       // Add two more integers to the type string
     $params[] = $limit;   // Add limit value
@@ -93,13 +105,13 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
 
     // 6. Execute Final Query
     $stmt = $conn->prepare($sql);
-    
+
     // Bind ALL parameters (Category if exists + Limit + Offset)
     $stmt->bind_param($types, ...$params);
-    
+
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     // fetch_all(MYSQLI_ASSOC) returns an associative array
     $products = $result->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
@@ -113,15 +125,17 @@ function search_by_category($conn, $category_id = 'all', $sort = 'default', $pag
 }
 
 //get product using id
-function getProductBy_id($conn, $id){
+function getProductBy_id($conn, $id)
+{
     $query = "SELECT * FROM `product` WHERE `product_id` = $id";
     $result = mysqli_query($conn, $query);
 
-        return mysqli_fetch_assoc($result);
+    return mysqli_fetch_assoc($result);
 }
 
 //Cart items for suer
-function getCartItems($conn, $user_id) {
+function getCartItems($conn, $user_id)
+{
     $sql = "SELECT ci.cart_item_id, ci.quantity, p.title, p.price, p.product_id, p.image 
             FROM cart c
             JOIN cartitem ci ON c.cart_id = ci.cart_id
@@ -137,9 +151,9 @@ function getCartItems($conn, $user_id) {
     // Bind parameters and execute
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    
+
     $result = $stmt->get_result();
-    
+
     // Return data
     if ($result->num_rows > 0) {
         return $result->fetch_all(MYSQLI_ASSOC);
@@ -149,31 +163,33 @@ function getCartItems($conn, $user_id) {
 }
 
 //search suggestions for ajax
-function getSearchSuggestions($conn, $query) {
+function getSearchSuggestions($conn, $query)
+{
     // Sanitize input
     $searchTerm = "%" . $query . "%";
-    
+
     // SQL Query: Get ID, Title, Image, Price (Limit 5 results)
     $sql = "SELECT product_id, title, image, price FROM Product WHERE is_active = 1 AND stock_quantity > 0 AND title LIKE ? LIMIT 5";
-    
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         return [];
     }
-    
+
     $stmt->bind_param("s", $searchTerm);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $suggestions = [];
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $suggestions[] = $row;
     }
-    
+
     return $suggestions;
 }
 
-function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
+function search_products_by_term($conn, $searchTerm, $sort, $page, $limit)
+{
     $offset = ($page - 1) * $limit;
     $term = "%" . $searchTerm . "%";
 
@@ -183,11 +199,9 @@ function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
     // Add Sorting
     if ($sort == 'price_low_high') {
         $sql .= " ORDER BY price ASC";
-    } 
-    elseif ($sort == 'price_high_low') {
+    } elseif ($sort == 'price_high_low') {
         $sql .= " ORDER BY price DESC";
-    } 
-    else {
+    } else {
         $sql .= " ORDER BY title ASC"; // Default sort
     }
 
@@ -208,46 +222,49 @@ function search_products_by_term($conn, $searchTerm, $sort, $page, $limit) {
 }
 
 // Order history
-function getUserOrders($conn, $user_id) {
+function getUserOrders($conn, $user_id)
+{
     $orders = [];
-    
+
     // 1. Fetch the main Orders
     $sql = "SELECT order_id, total_amount, order_date, order_status, shipping_address 
             FROM `order`    
             WHERE user_id = ? 
             ORDER BY order_date DESC";
-            
+
     $stmt = $conn->prepare($sql);
-    if (!$stmt) return [];
-    
+    if (!$stmt)
+        return [];
+
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     while ($row = $result->fetch_assoc()) {
         $order_id = $row['order_id'];
-        
+
         // For each order, fetch the Items + Product Details
         $itemSql = "SELECT oi.quantity, oi.price_at_purchase, p.product_id, p.title, p.image 
                     FROM orderitem oi 
                     JOIN product p ON oi.product_id = p.product_id 
                     WHERE oi.order_id = ?";
-                    
+
         $itemStmt = $conn->prepare($itemSql);
         $itemStmt->bind_param("i", $order_id);
         $itemStmt->execute();
         $itemResult = $itemStmt->get_result();
-        
+
         // Add items array to the order row
         $row['items'] = $itemResult->fetch_all(MYSQLI_ASSOC);
-        
+
         $orders[] = $row;
     }
-    
+
     return $orders;
 }
 
-function getUserPaymentMethods($conn, $user_id) {
+function getUserPaymentMethods($conn, $user_id)
+{
     $sql = "SELECT * FROM usercard WHERE user_id = ? AND is_active = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);

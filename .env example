@@ -1,0 +1,6 @@
+# Database Configuration
+DB_HOST=db
+DB_NAME=geargo
+DB_USER=admin
+DB_PASSWORD=admin123
+DB_ROOT_PASSWORD=root123
