@@ -42,11 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $file_type = $_FILES['profile_pic']['type'];
         $file_size = $_FILES['profile_pic']['size'];
         
+        $extension = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+        
         // Correct Destination with slash
-        $destination = "../assets/uploads/" . $user_id;
+        $destination = "../assets/uploads/{$user_id}.{$extension}";
 
-        // Validation size< 10MB and type image/jpeg or image/png
-        if ($file_size < 10000000 && ($file_type == "image/jpeg" || $file_type == "image/png" || $file_type == "image/jpg")) {
+        // Validation size< 10MB and type jpeg,jpg or png
+        $allowed = ['jpg', 'jpeg', 'png'];
+        if ($file_size < 10000000 && in_array($extension, $allowed)) {
             
             if (move_uploaded_file($tmp_name, $destination)) {
                 $final_profile_pic = $destination;

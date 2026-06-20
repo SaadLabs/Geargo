@@ -20,7 +20,7 @@ $conn = dbConnect();
 
 try {
     // Check if user has a cart
-    $cartSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
+    $cartSql = "SELECT cart_id FROM cart WHERE user_id = ?";
     $stmt = $conn->prepare($cartSql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
@@ -31,7 +31,7 @@ try {
         $cart_id = $row['cart_id'];
     } else {
         // Create new cart
-        $createSql = "INSERT INTO Cart (user_id, created_at) VALUES (?, NOW())";
+        $createSql = "INSERT INTO cart (user_id, created_at) VALUES (?, NOW())";
         $stmtCreate = $conn->prepare($createSql);
         $stmtCreate->bind_param("i", $user_id);
         $stmtCreate->execute();
@@ -40,7 +40,7 @@ try {
 
     // Add Item to Cart
     // Check if this product is already in the cart
-    $itemSql = "SELECT cart_item_id, quantity FROM CartItem WHERE cart_id = ? AND product_id = ?";
+    $itemSql = "SELECT cart_item_id, quantity FROM cartitem WHERE cart_id = ? AND product_id = ?";
     $stmtItem = $conn->prepare($itemSql);
     $stmtItem->bind_param("ii", $cart_id, $product_id);
     $stmtItem->execute();
@@ -51,13 +51,13 @@ try {
         $itemRow = $resultItem->fetch_assoc();
         $new_qty = $itemRow['quantity'] + $quantity;
 
-        $updateSql = "UPDATE CartItem SET quantity = ? WHERE cart_item_id = ?";
+        $updateSql = "UPDATE cartitem SET quantity = ? WHERE cart_item_id = ?";
         $stmtUpdate = $conn->prepare($updateSql);
         $stmtUpdate->bind_param("ii", $new_qty, $itemRow['cart_item_id']);
         $stmtUpdate->execute();
     } else {
         // Insert new item
-        $insertSql = "INSERT INTO CartItem (cart_id, product_id, quantity) VALUES (?, ?, ?)";
+        $insertSql = "INSERT INTO cartitem (cart_id, product_id, quantity) VALUES (?, ?, ?)";
         $stmtInsert = $conn->prepare($insertSql);
         $stmtInsert->bind_param("iii", $cart_id, $product_id, $quantity);
         $stmtInsert->execute();

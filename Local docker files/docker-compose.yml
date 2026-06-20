@@ -7,8 +7,6 @@ services:
       - "8080:80"
     volumes:
       - ./:/var/www/html/
-      # Now mapping the entire assets folder
-      - assets_data:/var/www/html/assets/ 
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
@@ -38,4 +36,3 @@ services:
 # Declaring the named volumes so Docker knows to create them
 volumes:
   db_data:
-  assets_data:w

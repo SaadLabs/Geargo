@@ -36,6 +36,21 @@ $myOrders = [];
 if ($isLoggedIn) {
   $myOrders = getUserOrders($conn, $user_id);
 }
+
+// Fetch User Details
+$profile_pic;
+$sql = "SELECT * FROM user WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+if (!$isLoggedIn || empty($user['profile_pic'])){
+    $profile_pic = "../assets/svg/user.svg";
+}
+else{
+    $profile_pic = $user['profile_pic'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -153,9 +168,7 @@ if ($isLoggedIn) {
 
         <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-        <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>">
-          <img src="../assets/svg/user.svg" alt="User Profile">
-        </a>
+        <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>"><img src="<?php echo $profile_pic; ?>" alt="User Profile"></a>
 
         <a class="nav-svg" href="javascript:void(0)"
           onclick="<?php echo $isLoggedIn ? 'openCart()' : "window.location.href='$loginPagePath'"; ?>">

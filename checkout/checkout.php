@@ -41,6 +41,21 @@ if ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+// Fetch User Details
+$profile_pic;
+$sql = "SELECT * FROM user WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+if (!$isLoggedIn || empty($user['profile_pic'])){
+    $profile_pic = "../assets/svg/user.svg";
+}
+else{
+    $profile_pic = $user['profile_pic'];
+}
+
 // FETCH SAVED CARDS (To check if user has any)
 $savedCards = getUserPaymentMethods($conn, $user_id);
 $hasCards = count($savedCards) > 0;
@@ -150,9 +165,7 @@ $hasCards = count($savedCards) > 0;
 
                 <span class="material-symbols-outlined mobile-search-icon">search</span>
 
-                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>">
-                    <img src="../assets/svg/user.svg" alt="User Profile">
-                </a>
+                <a class="nav-svg no-show-svg" href="<?php echo $accountLink; ?>"><img src="<?php echo $profile_pic; ?>" alt="User Profile"></a>
 
                 <a class="nav-svg" href="javascript:void(0)"
                     onclick="<?php echo $isLoggedIn ? 'openCart()' : "window.location.href='$loginPagePath'"; ?>">

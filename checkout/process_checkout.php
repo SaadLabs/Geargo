@@ -136,7 +136,7 @@ if ($stmt->execute()) {
     $itemStmt->close();
 
     // Empty Cart
-    $getCartIdSql = "SELECT cart_id FROM Cart WHERE user_id = ?";
+    $getCartIdSql = "SELECT cart_id FROM cart WHERE user_id = ?";
     $stmtCart = $conn->prepare($getCartIdSql);
     $stmtCart->bind_param("i", $user_id);
     $stmtCart->execute();
@@ -145,7 +145,7 @@ if ($stmt->execute()) {
     if ($cartRow = $cartResult->fetch_assoc()) {
         $cart_id = $cartRow['cart_id'];
 
-        $clearItemsSql = "DELETE FROM CartItem WHERE cart_id = ?";
+        $clearItemsSql = "DELETE FROM cartitem WHERE cart_id = ?";
         $stmtItems = $conn->prepare($clearItemsSql);
         $stmtItems->bind_param("i", $cart_id);
         $stmtItems->execute();

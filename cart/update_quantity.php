@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Ensure this cart item actually belongs to the logged-in user.
         // We join CartItem with Cart to check the user_id.
         $checkSql = "SELECT ci.cart_item_id 
-                     FROM CartItem ci
-                     JOIN Cart c ON ci.cart_id = c.cart_id
+                     FROM cartitem ci
+                     JOIN cart c ON ci.cart_id = c.cart_id
                      WHERE ci.cart_item_id = ? AND c.user_id = ?";
         
         $stmt = $conn->prepare($checkSql);
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows > 0) {
             // Ownership confirmed. Proceed to update.
-            $updateSql = "UPDATE CartItem SET quantity = ? WHERE cart_item_id = ?";
+            $updateSql = "UPDATE cartitem SET quantity = ? WHERE cart_item_id = ?";
             $updateStmt = $conn->prepare($updateSql);
             $updateStmt->bind_param("ii", $quantity, $cart_item_id);
             

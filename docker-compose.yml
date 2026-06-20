@@ -3,15 +3,16 @@ version: '3.8'
 services:
   web:
     build: .
+    restart: always # Keeps site online if the server reboots
     ports:
-      - "8080:80"
+      - "8080:80" # change to 80:80 if domain is used
     volumes:
-      - ./:/var/www/html/
+      # ONLY mapping the uploads folder to protect user data from restarts
+      - uploads_data:/var/www/html/assets/uploads/
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
     environment:
-      # Pulling credentials securely from .env file
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
@@ -21,7 +22,6 @@ services:
     image: mysql:9.1
     restart: always
     environment:
-      # Pulling MySQL setup instructions securely from .env file
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
@@ -29,10 +29,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      # Protects actual database data
       - db_data:/var/lib/mysql
+      # This will automatically set up database on the new cloud server
       - ./Backend/database_file/geargo.sql:/docker-entrypoint-initdb.d/init.sql
 
-# Declaring the named volumes so Docker knows to create them
 volumes:
   db_data:
+  uploads_data:

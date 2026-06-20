@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'])) {
 
     //Ensure this cart item belongs to the logged-in user's cart
     $checkSql = "SELECT ci.cart_item_id 
-                 FROM CartItem ci
-                 JOIN Cart c ON ci.cart_id = c.cart_id
+                 FROM cartitem ci
+                 JOIN cart c ON ci.cart_id = c.cart_id
                  WHERE ci.cart_item_id = ? AND c.user_id = ?";
                  
     $stmt = $conn->prepare($checkSql);
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'])) {
 
     if ($result->num_rows > 0) {
         // It's safe to delete
-        $deleteSql = "DELETE FROM CartItem WHERE cart_item_id = ?";
+        $deleteSql = "DELETE FROM cartitem WHERE cart_item_id = ?";
         $delStmt = $conn->prepare($deleteSql);
         $delStmt->bind_param("i", $cart_item_id);
         $delStmt->execute();

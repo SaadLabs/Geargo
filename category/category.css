@@ -210,7 +210,10 @@ button {
 }
 
 .nav-svg img {
+    width: 25px;
     height: 25px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .mobile-menu-icons {
@@ -231,7 +234,10 @@ button {
     }
 
     .nav-svg img {
+        width: 30px;
         height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     .no-show-svg {

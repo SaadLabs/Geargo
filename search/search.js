@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 data.forEach(product => {
                   let a = document.createElement('a');
-                  a.href = `product page/product.php?id=${product.product_id}`;
+                  a.href = `../product page/product.php?id=${product.product_id}`;
                   a.classList.add('suggestion-item');
 
                   let imgPath = product.image ? "../" + product.image : '../headphone1.png';

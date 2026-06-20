@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = $_POST["phone"];
     $password = $_POST["password"];
     $role = $_POST["role"];
+    $profile_pic = "";
     
     // Hash the password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -30,17 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
 
         // Register User
-        $insertUserSql = "INSERT INTO `user` (`name`, `email`, `password`, `phone`, `role`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+        $insertUserSql = "INSERT INTO `user` (`name`, `email`, `password`, `phone`, `role`, `profile_pic`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, NOW())";
         
         if ($stmt = $conn->prepare($insertUserSql)) {
-            $stmt->bind_param("sssss", $name, $email, $hashedPassword, $phone, $role);
+            $stmt->bind_param("ssssss", $name, $email, $hashedPassword, $phone, $role, $profile_pic);
             
             if ($stmt->execute()) {
                 // Get the ID of the new user
                 $new_user_id = $conn->insert_id;
                 
                 // Create a Cart for this new user
-                $createCartSql = "INSERT INTO Cart (user_id, created_at) VALUES (?, NOW())";
+                $createCartSql = "INSERT INTO cart (user_id, created_at) VALUES (?, NOW())";
                 $cartStmt = $conn->prepare($createCartSql);
                 $cartStmt->bind_param("i", $new_user_id);
                 $cartStmt->execute();
