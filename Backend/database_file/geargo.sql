@@ -307,9 +307,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `role`, `profile_pic`, `created_at`) VALUES
-(1, 'Khizar', 'khizar@gmail.com', '$2y$10$9ofFDJ1SPmH/b6UgSpNh/.EH3LCsGgMr7sVlYz79HI.iFIZqyyKea', '03320777167', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
-(3, 'Saad', 'saad@gmail.com', '$2y$10$Phsa1SJvJuST5L.RbB3p/e8i756wIeJK09/dd.C.hvT69m59aw1nW', '03320777167', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
-(4, 'Umer', 'umer@gmail.com', '$2y$10$sQc2AriORaqLYRQQLEdNM.ZmeqmTt0eqNVAj4IYBWK.rb2QtngZ5W', '03245175656', 'customer', '', '2026-01-04 13:25:22');
+(1, 'Admin', 'admin@gmail.com', '$2y$10$9ofFDJ1SPmH/b6UgSpNh/.EH3LCsGgMr7sVlYz79HI.iFIZqyyKea', '04456778543', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
+(3, 'Staff', 'staff@gmail.com', '$2y$10$Phsa1SJvJuST5L.RbB3p/e8i756wIeJK09/dd.C.hvT69m59aw1nW', '02234567096', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
+(4, 'Customer', 'customer@gmail.com', '$2y$10$sQc2AriORaqLYRQQLEdNM.ZmeqmTt0eqNVAj4IYBWK.rb2QtngZ5W', '02145321578', 'customer', '', '2026-01-04 13:25:22');
 
 -- --------------------------------------------------------
 
@@ -337,8 +337,8 @@ CREATE TABLE IF NOT EXISTS `usercard` (
 --
 
 INSERT INTO `usercard` (`card_id`, `user_id`, `card_number`, `last_four`, `cvv`, `exp_month`, `exp_year`, `card_holder_name`, `is_active`) VALUES
-(1, 3, '$2y$10$1xwNmUr/4wuxCeaR5tq4HuGVwVNgmjUU2CMlbfvLJ23cF9NADdih6', '0000', '$2y$10$N4fv0UXBaIWw7eRo53F/1uFj7MDXbegivrSzRBFEOORxIUjxZC79y', 12, 2026, 'Muhammad Saad', 1),
-(2, 4, '$2y$10$nR27S3AxS8Qy1Yh4y7JJR.j4fUf1PqjKwoYVp00BfkoRTpt7VgTpm', '1111', '$2y$10$n3ynq4yf8Mbw01WYRIaufOohmggcKnHUvG.pu0EB1XUteOjHeqz4y', 12, 2026, 'Umer', 1);
+(1, 3, '$2y$10$1xwNmUr/4wuxCeaR5tq4HuGVwVNgmjUU2CMlbfvLJ23cF9NADdih6', '0000', '$2y$10$N4fv0UXBaIWw7eRo53F/1uFj7MDXbegivrSzRBFEOORxIUjxZC79y', 12, 2026, 'Muhammad Ali', 1),
+(2, 4, '$2y$10$nR27S3AxS8Qy1Yh4y7JJR.j4fUf1PqjKwoYVp00BfkoRTpt7VgTpm', '1111', '$2y$10$n3ynq4yf8Mbw01WYRIaufOohmggcKnHUvG.pu0EB1XUteOjHeqz4y', 12, 2026, 'Michael Devin', 1);
 
 --
 -- Constraints for dumped tables
