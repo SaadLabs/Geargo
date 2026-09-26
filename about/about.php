@@ -230,13 +230,13 @@ else{
             <div class="dev-card">
                 <img src="../assets/developers/cropped_circle_image.png" alt="Developer 1">
                 <h3>Muhammad Saad Khan</h3>
-                <p>Front End Developer</p>
+                <!-- <p>Front End Developer</p> -->
             </div>
 
             <div class="dev-card">
                 <img src="../assets/developers/khizar.png" alt="Developer 2">
                 <h3>Khizar Nadeem</h3>
-                <p>Backend Developer</p>
+                <!-- <p>Backend Developer</p> -->
             </div>
         </div>
     </section>
