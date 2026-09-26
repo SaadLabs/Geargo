@@ -397,7 +397,7 @@ else{
         unset($_SESSION['error']);
     }
     ?>
-
+    <?php include_once 'components/disclaimer.php'; ?>
 </body>
 
 </html>
