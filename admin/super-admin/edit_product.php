@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once '../../Backend/config/functions.php';
 $conn = dbConnect();
@@ -32,6 +32,12 @@ $catResult = mysqli_query($conn, "SELECT * FROM category");
         .btn-save { background: #28a745; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; }
         .current-img { width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px; }
     </style>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon/favicon_io/favicon-16x16.png">
+    <link rel="shortcut icon" href="../../assets/favicon/favicon_io/favicon.ico">
+    <link rel="manifest" href="../../assets/favicon/favicon_io/site.webmanifest">
 </head>
 <body>
 
