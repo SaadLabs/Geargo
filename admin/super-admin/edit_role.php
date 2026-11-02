@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Start Session & Connect to DB
 session_start();
 require_once '../../Backend/config/functions.php';

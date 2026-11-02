@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 require_once '../../Backend/config/functions.php';
 $conn = dbConnect();
