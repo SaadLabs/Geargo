@@ -51,6 +51,12 @@ $profile = mysqli_fetch_assoc(mysqli_query($conn, $profileSql));
     <title>GearGo Staff Portal</title>
     <link rel="stylesheet" href="staff.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="icon" type="image/x-icon" href="../../assets/favicon/favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon/favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon/favicon_io/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="manifest" href="../../assets/favicon/favicon_io/site.webmanifest">
+    <meta name="theme-color" content="#0a0a0a">
 </head>
 
 <body>

@@ -307,9 +307,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `phone`, `role`, `profile_pic`, `created_at`) VALUES
-(1, 'Admin', 'admin@gmail.com', '$2y$10$9ofFDJ1SPmH/b6UgSpNh/.EH3LCsGgMr7sVlYz79HI.iFIZqyyKea', '04456778543', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
-(3, 'Staff', 'staff@gmail.com', '$2y$10$Phsa1SJvJuST5L.RbB3p/e8i756wIeJK09/dd.C.hvT69m59aw1nW', '02234567096', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
-(4, 'Customer', 'customer@gmail.com', '$2y$10$sQc2AriORaqLYRQQLEdNM.ZmeqmTt0eqNVAj4IYBWK.rb2QtngZ5W', '02145321578', 'customer', '', '2026-01-04 13:25:22');
+(1, 'Admin', 'admin@admin.com', '$2b$10$1MTxOAC/PgTJLP4Xn9Ct0OYsRV.6Em9sgXVAYnf257s1yO/qLVhTi', '04456778543', 'admin', '../assets/uploads/1', '2025-12-17 12:22:10'),
+(3, 'Staff', 'staff@staff.com', '$2b$10$f./QImke.fSW5K.3XQ.Vfuzf22yog2TeHgUd1CypBnImjG1efiPiq', '02234567096', 'staff', '../assets/uploads/3', '2026-01-03 14:02:00'),
+(4, 'Customer', 'customer@customer.com', '$2b$10$jZ1VpGRVYYir46QtjEGdhu9i0Ow3cQ05PYO/zlSoNelttuUWPT2XG', '02145321578', 'customer', '', '2026-01-04 13:25:22');
 
 -- --------------------------------------------------------
 
