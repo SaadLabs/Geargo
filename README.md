@@ -182,9 +182,9 @@ No license has been specified for this project.
 
 ## 👤 Authors
 
-**SaadLabs**
+
 - GitHub: [@SaadLabs](https://github.com/SaadLabs)
-**Khizar515**
+
 - GitHub: [@Khizar515](https://github.com/Khizar515)
 
 
